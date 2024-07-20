@@ -20,7 +20,7 @@ public class StatsController {
     }
 
     @PostMapping("/hit")
-    public ResponseEntity<String> createRecord(@RequestBody ViewStatsDto newData) {
+    public ResponseEntity<String> createRecord(@RequestBody EndpointHitDto newData) {
         log.debug("Endpoint /hit has been reached by {}", newData.toString());
         service.createRecord(newData);
         log.info("New statistics created about {}", newData.getApp());
@@ -28,15 +28,15 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<List<EndpointHitDto>> getStatistics(
+    public ResponseEntity<List<ViewStatsDto>> getStatistics(
             @RequestParam(value = "start") String start,
             @RequestParam(value = "end") String end,
             @RequestParam(value = "uris", required = false) Optional<List<String>> uris,
             @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
         log.debug("Endpoint /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
-                start, end, uris.get(), unique);
+                start, end, uris.orElse(List.of("Empty")), unique);
 
-        List<EndpointHitDto> stats = service.getStatistics(start, end, uris, unique);
+        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.get(), unique);
         return ResponseEntity.ok(stats);
     }
 }

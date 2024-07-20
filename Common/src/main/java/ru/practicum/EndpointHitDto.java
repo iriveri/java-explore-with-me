@@ -1,9 +1,12 @@
 package ru.practicum;
 
-import java.net.URI;
+import lombok.Data;
 
+@Data
 public class EndpointHitDto {
-    String app;
-    URI uri;
-    Long hits;
+    private String app;
+    private String uri;
+    private String ip;
+    private String timestamp;
+
 }
