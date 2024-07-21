@@ -3,10 +3,7 @@ package ru.practicum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,13 +36,5 @@ public class StatsServiceImpl implements StatsService{
         }
 
         return stats;
-    }
-
-    private Date parseDate(String dateString) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid date format: " + dateString, e);
-        }
     }
 }

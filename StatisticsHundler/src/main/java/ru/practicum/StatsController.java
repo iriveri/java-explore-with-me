@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +34,7 @@ public class StatsController {
      * @return {@link ResponseEntity} содержащий "Информация сохранена" и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping("/hit")
-    public ResponseEntity<String> createRecord(@RequestBody EndpointHitDto newData) {
+    public ResponseEntity<String> createRecord(@Valid @RequestBody EndpointHitDto newData) {
         log.debug("Endpoint /hit has been reached by {}", newData.toString());
         service.createRecord(newData);
         log.info("New statistics created about {}", newData.getApp());
@@ -63,14 +64,14 @@ public class StatsController {
             @RequestParam(value = "uris", required = false) Optional<List<String>> uris,
             @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
 
-            if (end.isBefore(start)) {
-                throw new ValidationException("Invalid input: 'end' date is before 'start' date");
-            }
+        if (end.isBefore(start)) {
+            throw new ValidationException("Invalid input: 'end' date is before 'start' date");
+        }
 
         log.debug("Endpoint /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
                 start, end, uris.orElse(List.of("Empty")), unique);
 
-        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.get(), unique);
+        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of("")), unique);
         return ResponseEntity.ok(stats);
     }
 }

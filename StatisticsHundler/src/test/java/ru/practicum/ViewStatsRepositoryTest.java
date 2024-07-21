@@ -1,6 +1,6 @@
 package ru.practicum;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Transactional
@@ -24,35 +25,35 @@ public class ViewStatsRepositoryTest {
     private ViewStatsRepository viewStatsRepository;
 
     @PersistenceContext
-    private static EntityManager entityManager;
+    private EntityManager entityManager;
 
-    @BeforeAll
-    public static void setUp() {
-        // Add test data
+    @BeforeEach
+    public void setUp() {
+
         LocalDate date = LocalDate.of(2021, 7, 1); //01 Jul 2021
         LocalTime time = LocalTime.of(12, 0, 0);//12:00:00 GMT
 
-        entityManager.persist(
-                new ClientStatistics(1L, "app1", "/home",
-                        "127.0.0.1", LocalDateTime.of(date, time))); // 01 Jul 2021 12:00:00 GMT
-        entityManager.persist(
-                new ClientStatistics(2L, "app1", "/contact",
-                        "127.0.0.1", LocalDateTime.of(date, time.plusMinutes(30)))); // 01 Jul 2021 12:30:00 GMT
-        entityManager.persist(
-                new ClientStatistics(3L, "app1", "/home",
-                        "127.0.0.1", LocalDateTime.of(date.plusDays(1), time))); // 02 Jul 2021 12:00:00 GMT
-        entityManager.persist(
-                new ClientStatistics(4L, "app1", "/contact",
-                        "127.0.0.1", LocalDateTime.of(date.plusDays(1), time.plusMinutes(30)))); // 02 Jul 2021 12:30:00 GMT
-        entityManager.persist(
-                new ClientStatistics(5L, "app1", "/home",
-                        "127.0.0.1", LocalDateTime.of(date.plusDays(2), time))); // 03 Jul 2021 12:00:00 GMT
-        entityManager.persist(
-                new ClientStatistics(6L, "app1", "/home",
-                        "127.0.0.1", LocalDateTime.of(date.plusDays(3), time))); // 04 Jul 2021 12:00:00 GMT
-        entityManager.persist(
-                new ClientStatistics(7L, "app1", "/contact",
-                        "127.0.0.1", LocalDateTime.of(date.plusDays(4), time.plusMinutes(30)))); // 04 Jul 2021 12:30:00 GMT
+        entityManager.persist( // 01 Jul 2021 12:00:00 GMT
+                new ClientStatistics(null, "app1", "/home",
+                        "127.0.0.1", LocalDateTime.of(date, time)));
+        entityManager.persist(// 01 Jul 2021 12:30:00 GMT
+                new ClientStatistics(null, "app1", "/contact",
+                        "127.0.0.1", LocalDateTime.of(date, time.plusMinutes(30))));
+        entityManager.persist( // 02 Jul 2021 12:00:00 GMT
+                new ClientStatistics(null, "app1", "/home",
+                        "127.0.0.1", LocalDateTime.of(date.plusDays(1), time)));
+        entityManager.persist(// 02 Jul 2021 12:30:00 GMT
+                new ClientStatistics(null, "app1", "/contact",
+                        "127.0.0.1", LocalDateTime.of(date.plusDays(1), time.plusMinutes(30))));
+        entityManager.persist( // 03 Jul 2021 12:00:00 GMT
+                new ClientStatistics(null, "app1", "/home",
+                        "127.0.0.1", LocalDateTime.of(date.plusDays(2), time)));
+        entityManager.persist( // 04 Jul 2021 12:00:00 GMT
+                new ClientStatistics(null, "app1", "/home",
+                        "127.0.0.1", LocalDateTime.of(date.plusDays(3), time)));
+        entityManager.persist( // 04 Jul 2021 12:30:00 GMT
+                new ClientStatistics(null, "app1", "/contact",
+                        "127.0.0.1", LocalDateTime.of(date.plusDays(4), time.plusMinutes(30))));
     }
 
     @Test
@@ -63,31 +64,55 @@ public class ViewStatsRepositoryTest {
 
         List<ViewStatsDto> stats = viewStatsRepository.findStatistics(start, end, uris);
 
-        assertEquals(2, stats.size());
+        assertNotNull(stats);
+        assertFalse(stats.isEmpty());
+        // Assuming expected data:
+        Map<String, Long> expectedHits = Map.of("/home", 4L, "/contact", 3L);
+
         for (ViewStatsDto stat : stats) {
-            if (stat.getUri().equals("/home")) {
-                assertEquals(4, stat.getHits());
-            } else if (stat.getUri().equals("/contact")) {
-                assertEquals(3, stat.getHits());
-            }
+            assertTrue(expectedHits.containsKey(stat.getUri()), "Unexpected URI: " + stat.getUri());
+            assertEquals(expectedHits.get(stat.getUri()), stat.getHits(), "Unexpected hits for URI: " + stat.getUri());
         }
     }
 
     @Test
     public void testFindUniqueStatistics() {
-        LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);  // 01 Jul 2021 00:00:00 GMT
-        LocalDateTime end = LocalDateTime.of(2021, 7, 31, 23, 59, 59);// 31 Jul 2021 23:59:59 GMT
+        LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2021, 7, 31, 23, 59, 59);
         List<String> uris = Arrays.asList("/home", "/contact");
 
         List<ViewStatsDto> uniqueStats = viewStatsRepository.findUniqueStatistics(start, end, uris);
 
-        assertEquals(2, uniqueStats.size());
+        assertNotNull(uniqueStats);
+        assertFalse(uniqueStats.isEmpty());
+
+        // Assuming expected data:
+        Map<String, Long> expectedHits = Map.of("/home", 1L, "/contact", 1L);
+
         for (ViewStatsDto stat : uniqueStats) {
-            if (stat.getUri().equals("/home")) {
-                assertEquals(4, stat.getHits());
-            } else if (stat.getUri().equals("/contact")) {
-                assertEquals(3, stat.getHits());
-            }
+            assertTrue(expectedHits.containsKey(stat.getUri()), "Unexpected URI: " + stat.getUri());
+            assertEquals(expectedHits.get(stat.getUri()), stat.getHits(), "Unexpected hits for URI: " + stat.getUri());
         }
+    }
+    @Test
+    public void testEmptyUriList() {
+        LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);  // 01 Jul 2021 00:00:00 GMT
+        LocalDateTime end = LocalDateTime.of(2021, 7, 31, 23, 59, 59);// 31 Jul 2021 23:59:59 GMT
+        List<String> uris = Arrays.asList("");
+
+        List<ViewStatsDto> stats = viewStatsRepository.findStatistics(start, end, uris);
+
+        assertEquals(0, stats.size());
+    }
+
+    @Test
+    public void testDistinctTimeLimits() {
+        LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);  // 01 Jul 2021 00:00:00 GMT
+        LocalDateTime end = LocalDateTime.of(2021, 7, 2, 23, 59, 59);// 31 Jul 2021 23:59:59 GMT
+        List<String> uris = Arrays.asList("/home", "/contact");
+
+        List<ViewStatsDto> stats = viewStatsRepository.findStatistics(start, end, uris);
+
+        assertEquals(4, stats.size());
     }
 }

@@ -14,16 +14,16 @@ public interface ViewStatsRepository extends JpaRepository<ClientStatistics, Lon
     @Query("SELECT new ru.practicum.ViewStatsDto(v.app, v.uri, COUNT(v)) " +
             "FROM ClientStatistics v " +
             "WHERE v.timestamp BETWEEN :start AND :end " +
-            "AND (:uris IS NULL OR v.uri IN :uris) " +
+            "AND  v.uri IN :uris " +
             "GROUP BY v.uri")
     List<ViewStatsDto> findStatistics(@Param("start") LocalDateTime start,
                                       @Param("end") LocalDateTime end,
                                       @Param("uris") List<String> uris);
 
-    @Query("SELECT new ru.practicum.ViewStatsDto(v.app, v.uri, COUNT(v)) " +
+    @Query("SELECT new ru.practicum.ViewStatsDto(v.app, v.uri, COUNT(DISTINCT v.ip)) " +
             "FROM ClientStatistics v " +
             "WHERE v.timestamp BETWEEN :start AND :end " +
-            "AND (:uris IS NULL OR v.uri IN :uris) " +
+            "AND  v.uri IN :uris " +
             "GROUP BY v.uri")
     List<ViewStatsDto> findUniqueStatistics(@Param("start") LocalDateTime start,
                                             @Param("end") LocalDateTime end,

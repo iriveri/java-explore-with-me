@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "CLIENT_STATISTICS")
 public class ClientStatistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +18,6 @@ public class ClientStatistics {
     private String app;
     private String uri;
     private String ip;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
 
 }
