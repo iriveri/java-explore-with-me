@@ -33,25 +33,25 @@ public class ViewStatsRepositoryTest {
         LocalDate date = LocalDate.of(2021, 7, 1); //01 Jul 2021
         LocalTime time = LocalTime.of(12, 0, 0);//12:00:00 GMT
 
-        entityManager.persist( // 01 Jul 2021 12:00:00 GMT
+        entityManager.persist(// 01 Jul 2021 12:00:00 GMT
                 new ClientStatistics(null, "app1", "/home",
                         "127.0.0.1", LocalDateTime.of(date, time)));
         entityManager.persist(// 01 Jul 2021 12:30:00 GMT
                 new ClientStatistics(null, "app1", "/contact",
                         "127.0.0.1", LocalDateTime.of(date, time.plusMinutes(30))));
-        entityManager.persist( // 02 Jul 2021 12:00:00 GMT
+        entityManager.persist(// 02 Jul 2021 12:00:00 GMT
                 new ClientStatistics(null, "app1", "/home",
                         "127.0.0.1", LocalDateTime.of(date.plusDays(1), time)));
         entityManager.persist(// 02 Jul 2021 12:30:00 GMT
                 new ClientStatistics(null, "app1", "/contact",
                         "127.0.0.1", LocalDateTime.of(date.plusDays(1), time.plusMinutes(30))));
-        entityManager.persist( // 03 Jul 2021 12:00:00 GMT
+        entityManager.persist(// 03 Jul 2021 12:00:00 GMT
                 new ClientStatistics(null, "app1", "/home",
                         "127.0.0.1", LocalDateTime.of(date.plusDays(2), time)));
-        entityManager.persist( // 04 Jul 2021 12:00:00 GMT
+        entityManager.persist(// 04 Jul 2021 12:00:00 GMT
                 new ClientStatistics(null, "app1", "/home",
                         "127.0.0.1", LocalDateTime.of(date.plusDays(3), time)));
-        entityManager.persist( // 04 Jul 2021 12:30:00 GMT
+        entityManager.persist(// 04 Jul 2021 12:30:00 GMT
                 new ClientStatistics(null, "app1", "/contact",
                         "127.0.0.1", LocalDateTime.of(date.plusDays(4), time.plusMinutes(30))));
     }
@@ -94,6 +94,7 @@ public class ViewStatsRepositoryTest {
             assertEquals(expectedHits.get(stat.getUri()), stat.getHits(), "Unexpected hits for URI: " + stat.getUri());
         }
     }
+
     @Test
     public void testEmptyUriList() {
         LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);  // 01 Jul 2021 00:00:00 GMT
@@ -113,6 +114,13 @@ public class ViewStatsRepositoryTest {
 
         List<ViewStatsDto> stats = viewStatsRepository.findStatistics(start, end, uris);
 
-        assertEquals(4, stats.size());
+        assertEquals(2, stats.size());
+
+        Map<String, Long> expectedHits = Map.of("/home", 2L, "/contact", 2L);
+
+        for (ViewStatsDto stat : stats) {
+            assertTrue(expectedHits.containsKey(stat.getUri()), "Unexpected URI: " + stat.getUri());
+            assertEquals(expectedHits.get(stat.getUri()), stat.getHits(), "Unexpected hits for URI: " + stat.getUri());
+        }
     }
 }

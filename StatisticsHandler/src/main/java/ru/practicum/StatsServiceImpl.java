@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class StatsServiceImpl implements StatsService{
+public class StatsServiceImpl implements StatsService {
     private final ViewStatsRepository repository;
 
     @Autowired

@@ -1,6 +1,8 @@
 package ru.practicum;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "CLIENT_STATISTICS")
+@Table(name = "Statistics")
 public class ClientStatistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
