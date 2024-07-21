@@ -1,13 +1,13 @@
 package ru.practicum;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class ClientStatistics {
     @Id
@@ -19,5 +19,6 @@ public class ClientStatistics {
     private String ip;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;
+    private LocalDateTime timestamp;
+
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -19,24 +20,22 @@ public class StatsServiceImpl implements StatsService{
 
     @Override
     public void createRecord(EndpointHitDto newData) {
-        ClientStatistics viewStats = new ClientStatistics();
-        viewStats.setApp(newData.getApp());
-        viewStats.setUri(newData.getUri());
-        viewStats.setIp(newData.getIp());
-        viewStats.setTimestamp(parseDate(newData.getTimestamp()));
-        repository.save(viewStats);
+        ClientStatistics newStatistics = new ClientStatistics();
+        newStatistics.setApp(newData.getApp());
+        newStatistics.setUri(newData.getUri());
+        newStatistics.setIp(newData.getIp());
+        newStatistics.setTimestamp(newData.getTimestamp());
+        repository.save(newStatistics);
     }
 
     @Override
-    public List<ViewStatsDto> getStatistics(String start, String end, List<String> uris, boolean unique) {
-        Date startDate = parseDate(start);
-        Date endDate = parseDate(end);
+    public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
 
         List<ViewStatsDto> stats;
         if (unique) {
-            stats = repository.findUniqueStatistics(startDate, endDate, uris);
+            stats = repository.findUniqueStatistics(start, end, uris);
         } else {
-            stats = repository.findStatistics(startDate, endDate, uris);
+            stats = repository.findStatistics(start, end, uris);
         }
 
         return stats;
