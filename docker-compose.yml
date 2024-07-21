@@ -2,7 +2,7 @@ version: '3.1'
 services:
   stats-server:
     build:
-      context: ./stats-server
+      context: ./stats/stats-server
     ports:
       - "9090:9090"
     environment:
@@ -27,6 +27,8 @@ services:
 
 
   ewm-service:
+    build:
+      context: ./ewm/ewm-service
     ports:
       - "8080:8080"
 
