@@ -1,11 +1,30 @@
 version: '3.1'
 services:
   stats-server:
+    build:
+      context: ./stats-server
     ports:
       - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/stats
+      SPRING_DATASOURCE_USERNAME: stats
+      SPRING_DATASOURCE_PASSWORD: stats
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQL10Dialect
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - stats-db
 
   stats-db:
     image: postgres:14-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: stats
+      POSTGRES_USER: stats
+      POSTGRES_PASSWORD: stats
+
+
 
   ewm-service:
     ports:
@@ -13,3 +32,6 @@ services:
 
   ewm-db:
     image: postgres:14-alpine
+
+volumes:
+  postgres-data:
