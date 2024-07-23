@@ -71,7 +71,7 @@ public class StatsController {
         log.debug("Endpoint /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
                 start, end, uris.orElse(List.of("Empty")), unique);
 
-        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of("")), unique);
+        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of()), unique);
         return ResponseEntity.ok(stats);
     }
 }

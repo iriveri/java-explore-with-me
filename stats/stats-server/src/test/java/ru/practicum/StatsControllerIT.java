@@ -43,4 +43,21 @@ public class StatsControllerIT {
                 .andExpect(jsonPath("$[0].uri").value("/test"))
                 .andExpect(jsonPath("$[0].hits").value(1));
     }
+
+    @Test
+    public void testCreateRecordWithoutUris() throws Exception {
+        String jsonRequest = "{ \"app\": \"testApp\", \"uri\": \"/test\", \"ip\": \"192.168.1.1\", \"timestamp\": \"2024-07-01 10:00:00\" }";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/hit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/stats")
+                        .param("start", "2024-07-01 00:00:00")
+                        .param("end", "2024-07-31 23:59:59"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].uri").value("/test"))
+                .andExpect(jsonPath("$[0].hits").value(2));
+    }
 }
