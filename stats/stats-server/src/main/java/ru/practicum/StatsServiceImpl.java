@@ -30,9 +30,17 @@ public class StatsServiceImpl implements StatsService {
 
         List<ViewStatsDto> stats;
         if (unique) {
-            stats = repository.findUniqueStatistics(start, end, uris);
+
+            if (uris.isEmpty())
+                stats = repository.findAllUniqueStatistics(start, end);
+            else
+                stats = repository.findUniqueStatistics(start, end, uris);
         } else {
-            stats = repository.findStatistics(start, end, uris);
+
+            if (uris.isEmpty())
+                stats = repository.findAllStatistics(start, end);
+            else
+                stats = repository.findStatistics(start, end, uris);
         }
 
         return stats;

@@ -99,11 +99,10 @@ public class ViewStatsRepositoryTest {
     public void testEmptyUriList() {
         LocalDateTime start = LocalDateTime.of(2021, 7, 1, 0, 0, 0);  // 01 Jul 2021 00:00:00 GMT
         LocalDateTime end = LocalDateTime.of(2021, 7, 31, 23, 59, 59);// 31 Jul 2021 23:59:59 GMT
-        List<String> uris = Arrays.asList("");
 
-        List<ViewStatsDto> stats = viewStatsRepository.findStatistics(start, end, uris);
+        List<ViewStatsDto> stats = viewStatsRepository.findAllStatistics(start, end);
 
-        assertEquals(0, stats.size());
+        assertEquals(2, stats.size());
     }
 
     @Test
