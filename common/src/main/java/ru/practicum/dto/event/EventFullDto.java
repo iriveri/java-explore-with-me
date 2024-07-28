@@ -1,5 +1,8 @@
 package ru.practicum.dto.event;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.dto.EventState;
 import ru.practicum.dto.Location;
@@ -8,7 +11,9 @@ import ru.practicum.dto.user.UserShortDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventFullDto {
 
     String annotation;
