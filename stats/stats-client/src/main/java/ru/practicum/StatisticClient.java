@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.dto.statistics.EndpointHitDto;
+import ru.practicum.dto.statistics.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
