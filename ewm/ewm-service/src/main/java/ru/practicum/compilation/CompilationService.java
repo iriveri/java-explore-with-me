@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompilationService {
-    Optional<CompilationDto> getCompilationById(Long compId);
+    CompilationDto getCompilationById(Long compId);
 
     List<CompilationDto> getCompilations(Optional<Boolean> pinned, int from, int size);
 

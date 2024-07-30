@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.compilation.CompilationDto;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
+@Validated
 @RequestMapping("/compilations")
 public class PublicCompilationController {
     private final CompilationService compilationService;
@@ -56,12 +58,9 @@ public class PublicCompilationController {
     public ResponseEntity<CompilationDto> getCompilation(@PathVariable Long compId) {
         log.debug("Endpoint /compilations/{} has been reached", compId);
 
-        Optional<CompilationDto> compilation = compilationService.getCompilationById(compId);
+        CompilationDto compilation = compilationService.getCompilationById(compId);
 
-        if (compilation.isPresent()) {
-            return ResponseEntity.ok(compilation.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Replace with a proper error response if needed
-        }
+        return ResponseEntity.ok(compilation);
+
     }
 }
