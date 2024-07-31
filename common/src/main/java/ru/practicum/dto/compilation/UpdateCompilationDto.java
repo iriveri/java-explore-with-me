@@ -5,17 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.UniqueElements;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateCompilationRequest {
+public class UpdateCompilationDto {
     @UniqueElements
     List<Integer> events;
     Boolean pinned;
-    @Max(50)
-    @Min(1)
+    @Size(min=1,max=50)
     String title;
 }

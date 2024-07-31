@@ -2,6 +2,7 @@ package ru.practicum.category;
 
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
+import ru.practicum.dto.category.UpdateCategoryDto;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface CategoryService {
 
     void deleteCategory(Long catId);
 
-    CategoryDto updateCategory(Long catId, CategoryDto categoryDto);
+    CategoryDto updateCategory(Long catId, UpdateCategoryDto categoryDto);
 
     List<CategoryDto> getCategories(int from, int size);
 
