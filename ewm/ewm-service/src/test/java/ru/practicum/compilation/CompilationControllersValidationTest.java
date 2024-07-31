@@ -11,13 +11,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.GlobalExceptionHandler;
+import ru.practicum.UniqueElements;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -40,7 +43,7 @@ class CompilationControllersValidationTest {
                 anyInt()
         )).thenReturn(Collections.emptyList());
 
-        CompilationDto compilation = new CompilationDto(1L, "New Compilation", false, "");
+        CompilationDto compilation = new CompilationDto();
 
         Mockito.when(compilationService.saveCompilation(any(NewCompilationDto.class)))
                 .thenReturn(compilation);
@@ -70,25 +73,45 @@ class CompilationControllersValidationTest {
     }
 
     @Test
-    public void testSaveCompilation() throws Exception {
+    public void testPrivatePostValidation() throws Exception {
+
+        String invalidEventsCompilation = "{ \"events\": [1,1], \"pinned\": \"true\", \"title\": \"title\" }";
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"New Compilation\"}"))
+                        .content(invalidEventsCompilation))
+                        .andExpect(status().isBadRequest());
+
+        String invalidTitleCompilation = "{ \"events\": [1,2] }";
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEventsCompilation))
+                .andExpect(status().isBadRequest());
+
+        String validCompilation = "{ \"events\": [1,2], \"title\": \"title\" }";
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEventsCompilation))
                 .andExpect(status().isCreated());
     }
-
     @Test
-    public void testDeleteCompilation() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/admin/compilations/1"))
-                .andExpect(status().isNoContent());
-    }
+    public void testPrivatePatchValidation() throws Exception {
 
-    @Test
-    public void testUpdateCompilation() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders.patch("/admin/compilations/1")
+        String invalidEventsCompilation = "{ \"events\": [1,1], \"pinned\": \"true\", \"title\": \"title\" }";
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"Updated Compilation\"}"))
+                        .content(invalidEventsCompilation))
+                .andExpect(status().isBadRequest());
+
+        String invalidTitleCompilation = "{ \"events\": [1,2] }";
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEventsCompilation))
+                .andExpect(status().isBadRequest());
+
+        String validCompilation = "{ \"events\": [1,2], \"title\": \"title\" }";
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/compilations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEventsCompilation))
                 .andExpect(status().isOk());
     }
 

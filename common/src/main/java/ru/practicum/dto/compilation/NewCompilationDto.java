@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class NewCompilationDto {
     @UniqueElements
+    @NotNull
     List<Integer> events;
     Boolean pinned = false;
     @Max(50)
