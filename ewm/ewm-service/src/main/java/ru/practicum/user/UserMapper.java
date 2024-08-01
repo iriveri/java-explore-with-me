@@ -9,7 +9,8 @@ import ru.practicum.dto.user.UserDto;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
-    UserDto toDto(User user);
 
     User fromDto(NewUserDto userDto);
+
+    UserDto toDto(User user);
 }
