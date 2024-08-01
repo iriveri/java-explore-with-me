@@ -1,19 +1,26 @@
 package ru.practicum.event;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.dto.EventState;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.UpdateEventAdminRequest;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Validated
+@Slf4j
 @RequestMapping("/admin/events")
 public class AdminEventController {
 
@@ -25,12 +32,12 @@ public class AdminEventController {
 
     /**
      * Поиск событий.
-     * Эндпоинт возвращает полную информацию обо всех событиях подходящих под переданные условия
-     * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
+     * Эндпоинт возвращает полную информацию обо всех событиях подходящих под переданные условия.
+     * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список.
      *
      * @param users список id пользователей, чьи события нужно найти
-     * @param states список состояний в которых находятся искомые события
-     * @param categories список id категорий в которых будет вестись поиск
+     * @param states список состояний, в которых находятся искомые события
+     * @param categories список id категорий, в которых будет вестись поиск
      * @param rangeStart дата и время не раньше которых должно произойти событие
      * @param rangeEnd дата и время не позже которых должно произойти событие
      * @param from количество событий, которые нужно пропустить для формирования текущего набора
@@ -39,28 +46,20 @@ public class AdminEventController {
      */
     @GetMapping
     public ResponseEntity<List<EventFullDto>> getEvents(
-            @RequestParam(required = false) Optional<List<Long>> users,
-            @RequestParam(required = false) Optional<List<String>> states,
-            @RequestParam(required = false) Optional<List<Long>> categories,
-            @RequestParam(required = false) Optional<String> rangeStart,
-            @RequestParam(required = false) Optional<String> rangeEnd,
+            @RequestParam(required = false) List<Long> users,
+            @RequestParam(required = false) List<EventState> states,
+            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size){
-        log.debug("Endpoint GET /admin/events has been reached with users: {}, states: {}, categories: {}, rangeStart: {}, rangeEnd: {}, from: {}, size: {},",
-                users.orElse(List.of(null)),
-                states.orElse(List.of("Empty")),
-                categories.orElse(List.of(null)),
-                rangeStart.orElse("Empty"),
-                rangeEnd.orElse("Empty"),
-                from, size);
-        List<EventFullDto> events = eventService.getEvents(
-                users.orElse(List.of()),
-                states.orElse(List.of()),
-                categories.orElse(List.of()),
-                rangeStart.orElse(""),
-                rangeEnd.orElse(""),
-                from, size);
-        log.info("Event`s list for admin role fetched successfully");
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+
+        log.debug("Endpoint GET /admin/events has been reached with users: {}, states: {}, categories: {}, rangeStart: {}, rangeEnd: {}, from: {}, size: {}",
+                users, states, categories, rangeStart, rangeEnd, from, size);
+
+        List<EventFullDto> events = eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        log.info("Events list for admin role fetched successfully with {} events", events.size());
+
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
@@ -71,18 +70,19 @@ public class AdminEventController {
      * Событие можно отклонить, только если оно еще не опубликовано (Ожидается код ошибки 409)
      *
      * @param eventId id события
-     * @param updateEventAdminRequest {@link UpdateEventAdminRequest} Данные для изменения информации о событиия
+     * @param updateEventAdminRequest {@link UpdateEventAdminRequest} данные для изменения информации о событии
      * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
-        log.debug("Endpoint PATCH /admin/events/{} has been reached with UpdateEventAdminRequest: {}",
-                eventId,updateEventAdminRequest);
+            @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
+
+        log.debug("Endpoint PATCH /admin/events/{} has been reached with UpdateEventAdminRequest: {}", eventId, updateEventAdminRequest);
 
         EventFullDto updatedEvent = eventService.updateEvent(eventId, updateEventAdminRequest);
-        log.info("Event`s {} status was changed successfully",eventId);
+        log.info("Event {} status was changed successfully", eventId);
+
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
     }
 }
