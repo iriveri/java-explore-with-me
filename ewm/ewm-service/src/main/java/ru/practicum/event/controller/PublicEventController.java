@@ -1,8 +1,6 @@
-package ru.practicum.event;
+package ru.practicum.event.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +10,7 @@ import ru.practicum.StatisticsService;
 import ru.practicum.dto.EventSort;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.event.service.EventService;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

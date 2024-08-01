@@ -1,4 +1,4 @@
-package ru.practicum.category;
+package ru.practicum.category.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.compilation.CompilationDto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -36,7 +36,7 @@ public class PublicCategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCategories(
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100)  int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
 
         log.debug("Endpoint GET /categories has been reached with from: {}, size: {}", from, size);
         List<CategoryDto> categories = categoryService.getCategories(from, size);
@@ -54,7 +54,7 @@ public class PublicCategoryController {
     @GetMapping("/{catId}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable Long catId) {
         log.debug("Endpoint GET /categories/{} has been reached", catId);
-        CategoryDto category = categoryService.getCategoryById(catId);
+        CategoryDto category = categoryService.getCategoryDtoById(catId);
         log.info("Category {} fetched successfully", catId);
         return ResponseEntity.ok(category);
     }

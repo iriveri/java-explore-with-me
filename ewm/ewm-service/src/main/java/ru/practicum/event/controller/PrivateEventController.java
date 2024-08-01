@@ -1,4 +1,4 @@
-package ru.practicum.event;
+package ru.practicum.event.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.NewEventDto;
 import ru.practicum.dto.event.UpdateEventUserRequest;
+import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -62,7 +63,7 @@ public class PrivateEventController {
             @Valid @RequestBody NewEventDto newEventDto) {
 
         log.debug("Endpoint POST /users/{}/events has been reached with NewEventDto: {}", userId, newEventDto);
-        EventFullDto createdEvent = eventService.addEvent(userId, newEventDto);
+        EventFullDto createdEvent = eventService.create(userId, newEventDto);
         log.info("User's {} event {} created successfully", userId, createdEvent.getId());
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }

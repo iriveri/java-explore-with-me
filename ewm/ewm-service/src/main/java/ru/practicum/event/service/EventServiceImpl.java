@@ -1,4 +1,4 @@
-package ru.practicum.event;
+package ru.practicum.event.service;
 
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.EventSort;
@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class EventServiceImpl implements EventService{
-
+public class EventServiceImpl implements EventService {
 
     @Override
-    public List<EventFullDto> getEvents(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
+    public EventFullDto create(Long userId, NewEventDto newEventDto) {
         return null;
     }
 
@@ -23,14 +22,10 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public List<EventShortDto> getUserEvents(Long userId, int from, int size) {
-        return List.of();
-    }
-
-    @Override
-    public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
+    public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
         return null;
     }
+
 
     @Override
     public EventFullDto getEvent(Long userId, Long eventId) {
@@ -38,9 +33,15 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
+    public List<EventShortDto> getUserEvents(Long userId, int from, int size) {
+        return List.of();
+    }
+
+    @Override
+    public List<EventFullDto> getEvents(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         return null;
     }
+
 
     @Override
     public List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSort sort, int from, int size) {

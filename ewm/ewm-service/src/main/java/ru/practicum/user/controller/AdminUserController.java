@@ -1,13 +1,13 @@
-package ru.practicum.user;
+package ru.practicum.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.user.NewUserRequest;
+import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
-import ru.practicum.dto.user.UserShortDto;
+import ru.practicum.user.service.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -51,13 +51,13 @@ public class AdminUserController {
     /**
      * Добавление нового пользователя.
      *
-     * @param newUser {@link NewUserRequest} данные добавляемого пользователя
+     * @param newUser {@link NewUserDto} данные добавляемого пользователя
      * @return {@link ResponseEntity} содержащий объект {@link UserDto} и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping
-    public ResponseEntity<UserDto> addUser(@Valid @RequestBody NewUserRequest newUser) {
+    public ResponseEntity<UserDto> addUser(@Valid @RequestBody NewUserDto newUser) {
         log.debug("Endpoint POST /admin/users has been reached with NewUserRequest: {}", newUser);
-        UserDto createdUser = userService.addUser(newUser);
+        UserDto createdUser = userService.create(newUser);
         log.info("User {} created successfully", createdUser.getId());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -71,7 +71,7 @@ public class AdminUserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable long userId) {
         log.debug("Endpoint DELETE /admin/users/{} has been reached", userId);
-        userService.deleteUser(userId);
+        userService.delete(userId);
         log.info("User {} deleted successfully", userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

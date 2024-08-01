@@ -1,6 +1,5 @@
 package ru.practicum.compilation;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,13 +11,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.GlobalExceptionHandler;
-import ru.practicum.category.AdminCategoryController;
-import ru.practicum.category.CategoryService;
-import ru.practicum.category.PublicCategoryController;
+import ru.practicum.category.controller.AdminCategoryController;
+import ru.practicum.category.service.CategoryService;
+import ru.practicum.category.controller.PublicCategoryController;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
-import ru.practicum.dto.compilation.UpdateCompilationDto;
 
 import java.util.Collections;
 

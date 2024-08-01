@@ -1,6 +1,5 @@
 package ru.practicum.compilation;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,6 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.GlobalExceptionHandler;
+import ru.practicum.compilation.controller.AdminCompilationController;
+import ru.practicum.compilation.controller.PublicCompilationController;
+import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationDto;
@@ -42,7 +44,7 @@ class CompilationControllersValidationTest {
 
         CompilationDto compilation = new CompilationDto(null,1L,true,"lol");
 
-        Mockito.when(compilationService.saveCompilation(any(NewCompilationDto.class)))
+        Mockito.when(compilationService.addCompilation(any(NewCompilationDto.class)))
                 .thenReturn(compilation);
 
         Mockito.when(compilationService.updateCompilation(eq(1L), any(UpdateCompilationDto.class)))

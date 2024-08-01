@@ -1,4 +1,4 @@
-package ru.practicum.compilation;
+package ru.practicum.compilation.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 
 import javax.validation.constraints.Max;
@@ -58,7 +59,7 @@ public class PublicCompilationController {
     @GetMapping("/{compId}")
     public ResponseEntity<CompilationDto> getCompilation(@PathVariable Long compId) {
         log.debug("Endpoint GET /compilations/{} has been reached", compId);
-        CompilationDto compilation = compilationService.getCompilationById(compId);
+        CompilationDto compilation = compilationService.getCompilationDtoById(compId);
         log.info("Compilation {} fetched successfully",compId);
         return ResponseEntity.ok(compilation);
 

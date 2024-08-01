@@ -1,8 +1,9 @@
-package ru.practicum.compilation;
+package ru.practicum.compilation.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationDto;
@@ -29,7 +30,7 @@ public class AdminCompilationController {
     @PostMapping
     public ResponseEntity<CompilationDto> saveCompilation(@Valid @RequestBody NewCompilationDto newCompilation) {
         log.debug("Endpoint POST /admin/compilations has been reached with NewCompilationDto: {}", newCompilation);
-        CompilationDto savedCompilation = compilationService.saveCompilation(newCompilation);
+        CompilationDto savedCompilation = compilationService.addCompilation(newCompilation);
         log.info("Compilation {} created successfully",savedCompilation.getId());
         return new ResponseEntity<>(savedCompilation, HttpStatus.CREATED);
     }

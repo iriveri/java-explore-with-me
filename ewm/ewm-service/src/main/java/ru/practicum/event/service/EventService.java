@@ -1,4 +1,4 @@
-package ru.practicum.event;
+package ru.practicum.event.service;
 
 import ru.practicum.dto.EventSort;
 import ru.practicum.dto.EventState;
@@ -14,7 +14,7 @@ public interface EventService {
 
     List<EventShortDto> getUserEvents(Long userId, int from, int size);
 
-    EventFullDto addEvent(Long userId, NewEventDto newEventDto);
+    EventFullDto create(Long userId, NewEventDto newEventDto);
 
     EventFullDto getEvent(Long userId, Long eventId);
 
