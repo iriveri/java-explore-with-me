@@ -1,4 +1,5 @@
 package ru.practicum;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -11,6 +12,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueElements {
     String message() default "List must contain unique elements";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

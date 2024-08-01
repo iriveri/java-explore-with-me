@@ -7,13 +7,14 @@ import ru.practicum.UniqueElements;
 
 import javax.validation.constraints.Size;
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCompilationDto {
     @UniqueElements
-    List<Integer> events;
+    List<Long> events;
     Boolean pinned;
-    @Size(min=1,max=50)
+    @Size(min = 1, max = 50)
     String title;
 }

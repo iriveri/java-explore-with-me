@@ -31,20 +31,20 @@ public class PublicCompilationController {
      * В случае, если по заданным фильтрам не найдено ни одной подборки, возвращает пустой список.
      *
      * @param pinned искать только закрепленные/не закрепленные подборки
-     * @param from количество элементов, которые нужно пропустить для формирования текущего набора
-     * @param size количество элементов в наборе
+     * @param from   количество элементов, которые нужно пропустить для формирования текущего набора
+     * @param size   количество элементов в наборе
      * @return {@link ResponseEntity} содержащий список {@link CompilationDto} и статус ответа {@link HttpStatus#OK}
      */
     @GetMapping
     public ResponseEntity<List<CompilationDto>> getCompilations(
             @RequestParam(value = "pinned", required = false) Optional<Boolean> pinned,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size){
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
 
         log.debug("Endpoint GET /compilations has been reached with pinned: {}, from: {}, size: {}",
                 pinned.orElse(null), from, size);
 
-        List<CompilationDto> compilations = compilationService.getCompilations(pinned, from, size);
+        List<CompilationDto> compilations = compilationService.getAll(pinned, from, size);
         log.info("Compilations fetched successfully");
         return ResponseEntity.ok(compilations);
     }
@@ -59,8 +59,8 @@ public class PublicCompilationController {
     @GetMapping("/{compId}")
     public ResponseEntity<CompilationDto> getCompilation(@PathVariable Long compId) {
         log.debug("Endpoint GET /compilations/{} has been reached", compId);
-        CompilationDto compilation = compilationService.getCompilationDtoById(compId);
-        log.info("Compilation {} fetched successfully",compId);
+        CompilationDto compilation = compilationService.getById(compId);
+        log.info("Compilation {} fetched successfully", compId);
         return ResponseEntity.ok(compilation);
 
     }

@@ -36,7 +36,7 @@ class CompilationControllersValidationTest {
 
     @BeforeEach
     public void setUp(@Autowired CompilationService compilationService) {
-        Mockito.when(compilationService.getCompilations(
+        Mockito.when(compilationService.getAll(
                 any(Optional.class),
                 anyInt(),
                 anyInt()
@@ -44,10 +44,10 @@ class CompilationControllersValidationTest {
 
         CompilationDto compilation = new CompilationDto(null,1L,true,"lol");
 
-        Mockito.when(compilationService.addCompilation(any(NewCompilationDto.class)))
+        Mockito.when(compilationService.create(any(NewCompilationDto.class)))
                 .thenReturn(compilation);
 
-        Mockito.when(compilationService.updateCompilation(eq(1L), any(UpdateCompilationDto.class)))
+        Mockito.when(compilationService.update(eq(1L), any(UpdateCompilationDto.class)))
                 .thenReturn(compilation);
     }
 

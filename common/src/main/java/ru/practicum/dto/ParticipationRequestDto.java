@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +15,6 @@ public class ParticipationRequestDto {
     LocalDateTime created;
     Long event;
     Long id;
-    Long  requester;
+    Long requester;
     EventState status;
 }

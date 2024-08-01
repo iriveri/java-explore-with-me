@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.dto.ParticipationRequestDto;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

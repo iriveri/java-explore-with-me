@@ -1,4 +1,5 @@
 package ru.practicum.compilation.controller;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class AdminCompilationController {
     @PostMapping
     public ResponseEntity<CompilationDto> saveCompilation(@Valid @RequestBody NewCompilationDto newCompilation) {
         log.debug("Endpoint POST /admin/compilations has been reached with NewCompilationDto: {}", newCompilation);
-        CompilationDto savedCompilation = compilationService.addCompilation(newCompilation);
-        log.info("Compilation {} created successfully",savedCompilation.getId());
+        CompilationDto savedCompilation = compilationService.create(newCompilation);
+        log.info("Compilation {} created successfully", savedCompilation.getId());
         return new ResponseEntity<>(savedCompilation, HttpStatus.CREATED);
     }
 
@@ -44,7 +45,7 @@ public class AdminCompilationController {
     @DeleteMapping("/{compId}")
     public ResponseEntity<Void> deleteCompilation(@PathVariable Long compId) {
         log.debug("Endpoint DELETE /admin/compilations/{} has been reached", compId);
-        compilationService.deleteCompilation(compId);
+        compilationService.delete(compId);
         log.info("Compilation {} deleted successfully", compId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -52,7 +53,7 @@ public class AdminCompilationController {
     /**
      * Обновить информация о подборке
      *
-     * @param compId идентификатор подборки
+     * @param compId               идентификатор подборки
      * @param updateCompilationDto {@link UpdateCompilationDto} данные для обновления подборки
      * @return {@link ResponseEntity} содержащий обновленный {@link CompilationDto} и статус ответа {@link HttpStatus#OK}
      */
@@ -63,7 +64,7 @@ public class AdminCompilationController {
         log.debug("Endpoint PATCH /admin/compilations/{} has been reached with UpdateCompilationRequest: {}",
                 compId, updateCompilationDto);
 
-        CompilationDto updatedCompilation = compilationService.updateCompilation(compId, updateCompilationDto);
+        CompilationDto updatedCompilation = compilationService.update(compId, updateCompilationDto);
         log.info("Compilation {} patched successfully", compId);
         return ResponseEntity.ok(updatedCompilation);
     }

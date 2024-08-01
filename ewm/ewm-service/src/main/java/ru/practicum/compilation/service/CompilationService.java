@@ -11,15 +11,15 @@ import java.util.Optional;
 public interface CompilationService {
 
 
-    CompilationDto addCompilation(NewCompilationDto newCompilationDto);
+    CompilationDto create(NewCompilationDto newCompilationDto);
 
-    void deleteCompilation(Long compId);
+    CompilationDto update(Long compId, UpdateCompilationDto updateCompilationDto);
 
-    CompilationDto updateCompilation(Long compId, UpdateCompilationDto updateCompilationDto);
+    void delete(Long compId);
 
-    Compilation getCompilationById(Long compId);
+    Compilation getEntityById(Long compId);
 
-    CompilationDto getCompilationDtoById(Long compId);
+    CompilationDto getById(Long compId);
 
-    List<CompilationDto> getCompilations(Optional<Boolean> pinned, int offset, int limit);
+    List<CompilationDto> getAll(Optional<Boolean> pinned, int offset, int limit);
 }
