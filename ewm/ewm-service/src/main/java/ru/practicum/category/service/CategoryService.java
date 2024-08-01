@@ -8,15 +8,15 @@ import ru.practicum.dto.category.UpdateCategoryDto;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDto addCategory(NewCategoryDto newCategoryDto);
+    CategoryDto create(NewCategoryDto newCategoryDto);
 
-    CategoryDto updateCategory(Long catId, UpdateCategoryDto categoryDto);
+    CategoryDto update(Long catId, UpdateCategoryDto categoryDto);
 
-    void deleteCategory(Long catId);
+    void delete(Long catId);
 
-    Category getCategoryById(Long catId);
+    Category getEntityById(Long catId);
 
-    CategoryDto getCategoryDtoById(Long catId);
+    CategoryDto getById(Long catId);
 
-    List<CategoryDto> getCategories(int offset, int limit);
+    List<CategoryDto> getAll(int offset, int limit);
 }

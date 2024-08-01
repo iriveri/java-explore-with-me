@@ -32,7 +32,7 @@ public class AdminCategoryController {
     @PostMapping
     public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         log.debug("Endpoint POST /admin/categories has been reached with NewCategoryDto: {}", newCategoryDto);
-        CategoryDto createdCategory = categoryService.addCategory(newCategoryDto);
+        CategoryDto createdCategory = categoryService.create(newCategoryDto);
         log.info("Category {} created successfully", createdCategory.getId());
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
@@ -47,7 +47,7 @@ public class AdminCategoryController {
     @DeleteMapping("/{catId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long catId) {
         log.debug("Endpoint DELETE /admin/categories/{} has been reached", catId);
-        categoryService.deleteCategory(catId);
+        categoryService.delete(catId);
         log.info("Category {} deleted successfully", catId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -67,7 +67,7 @@ public class AdminCategoryController {
         log.debug("Endpoint PATCH /admin/categories/{} has been reached with CategoryDto: {}",
                 catId, categoryDto);
 
-        CategoryDto updatedCategory = categoryService.updateCategory(catId, categoryDto);
+        CategoryDto updatedCategory = categoryService.update(catId, categoryDto);
         log.info("Category {} patched successfully", catId);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }

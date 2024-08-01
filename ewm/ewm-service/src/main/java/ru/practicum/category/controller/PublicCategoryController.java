@@ -39,7 +39,7 @@ public class PublicCategoryController {
             @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
 
         log.debug("Endpoint GET /categories has been reached with from: {}, size: {}", from, size);
-        List<CategoryDto> categories = categoryService.getCategories(from, size);
+        List<CategoryDto> categories = categoryService.getAll(from, size);
         log.info("Categories fetched successfully");
         return ResponseEntity.ok(categories);
     }
@@ -54,7 +54,7 @@ public class PublicCategoryController {
     @GetMapping("/{catId}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable Long catId) {
         log.debug("Endpoint GET /categories/{} has been reached", catId);
-        CategoryDto category = categoryService.getCategoryDtoById(catId);
+        CategoryDto category = categoryService.getById(catId);
         log.info("Category {} fetched successfully", catId);
         return ResponseEntity.ok(category);
     }

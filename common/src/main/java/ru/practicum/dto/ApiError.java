@@ -7,16 +7,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApiError {
-    StackTraceElement[] errors;
-    String message;
-    String reason;
     HttpStatus status;
+    String reason;
+    String message;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime timestamp;
+    StackTraceElement[] errors;
 
 }

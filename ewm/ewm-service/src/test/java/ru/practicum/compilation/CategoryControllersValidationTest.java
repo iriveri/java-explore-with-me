@@ -36,17 +36,17 @@ class CategoryControllersValidationTest {
 
     @BeforeEach
     public void setUp(@Autowired CategoryService compilationService) {
-        Mockito.when(compilationService.getCategories(
+        Mockito.when(compilationService.getAll(
                 anyInt(),
                 anyInt()
         )).thenReturn(Collections.emptyList());
 
         CategoryDto category = new CategoryDto(1L,"lol");
 
-        Mockito.when(compilationService.addCategory(any(NewCategoryDto.class)))
+        Mockito.when(compilationService.create(any(NewCategoryDto.class)))
                 .thenReturn(category);
 
-        Mockito.when(compilationService.updateCategory(eq(1L), any(UpdateCategoryDto.class)))
+        Mockito.when(compilationService.update(eq(1L), any(UpdateCategoryDto.class)))
                 .thenReturn(category);
     }
 
