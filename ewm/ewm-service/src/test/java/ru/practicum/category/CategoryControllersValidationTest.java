@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.ConditionNotMetException;
 import ru.practicum.GlobalExceptionHandler;
 import ru.practicum.category.controller.AdminCategoryController;
-import ru.practicum.category.service.CategoryService;
 import ru.practicum.category.controller.PublicCategoryController;
+import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
@@ -21,7 +21,6 @@ import ru.practicum.dto.category.UpdateCategoryDto;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 

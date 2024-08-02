@@ -10,13 +10,14 @@ import java.util.List;
 public interface ParticipationRequestService {
 
     ParticipationRequestDto create(Long userId, Long eventId);
+
     EventRequestStatusUpdateResult updateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest);
 
     ParticipationRequestDto delete(Long userId, Long requestId);
 
     ParticipationRequest getEntityById(Long requestId);
 
-    public List<ParticipationRequestDto> getByUserId(Long userId);
+    List<ParticipationRequestDto> getByUserId(Long userId);
 
     List<ParticipationRequestDto> getByEventId(Long userId, Long eventId);
 

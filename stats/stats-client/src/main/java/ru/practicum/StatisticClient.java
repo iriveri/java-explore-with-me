@@ -2,10 +2,8 @@ package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.dto.statistics.EndpointHitDto;
 import ru.practicum.dto.statistics.ViewStatsDto;
@@ -13,16 +11,17 @@ import ru.practicum.dto.statistics.ViewStatsDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@Service
 public class StatisticClient {
 
     private final RestTemplate restTemplate;
     private final String serverUrl;
 
+
     @Autowired
-    public StatisticClient(RestTemplate restTemplate, String serverUrl) {
-        this.restTemplate = restTemplate;
-        this.serverUrl = serverUrl;
+    public StatisticClient() {
+        this.restTemplate = new RestTemplate();
+        this.serverUrl = "./stats/stats-server";
     }
 
     public void hitStatistic(String app, String uri, String ip, LocalDateTime timestamp) {
@@ -32,7 +31,7 @@ public class StatisticClient {
         headers.set("Content-Type", "application/json");
         HttpEntity<EndpointHitDto> request = new HttpEntity<>(hitData, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-        if (response.getStatusCode().is2xxSuccessful()) {
+        if (response.getStatusCode().equals(HttpStatus.CREATED)) {
             // Логирование или обработка успешного ответа
         } else {
             // Логирование или обработка неуспешного ответа
@@ -58,7 +57,7 @@ public class StatisticClient {
                 new ParameterizedTypeReference<List<ViewStatsDto>>() {
                 }, params);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
+        if (response.getStatusCode().equals(HttpStatus.OK)) {
             return response.getBody();
         } else {
             // Логирование или обработка неуспешного ответа

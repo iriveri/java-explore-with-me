@@ -6,12 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.StatisticsService;
-import ru.practicum.dto.event.EventSort;
+import ru.practicum.StatisticClient;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.EventSort;
 import ru.practicum.event.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
@@ -24,11 +25,11 @@ import java.util.List;
 public class PublicEventController {
 
     private final EventService eventService;
-    private final StatisticsService statisticsService;
+    private final StatisticClient statisticClient;
 
-    public PublicEventController(EventService eventService, StatisticsService statisticsService) {
+    public PublicEventController(EventService eventService, StatisticClient statisticClient) {
         this.eventService = eventService;
-        this.statisticsService = statisticsService;
+        this.statisticClient = statisticClient;
     }
 
     /**
@@ -52,6 +53,7 @@ public class PublicEventController {
      */
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getEvents(
+            HttpServletRequest request,
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
@@ -67,7 +69,7 @@ public class PublicEventController {
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
 
         List<EventShortDto> events = eventService.getAll(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
-        statisticsService.recordRequest("/events", events.size());
+        statisticClient.hitStatistic("ewm-service", "/events", request.getRemoteAddr(), LocalDateTime.now());
         log.info("Event's list fetched successfully with {} events", events.size());
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
@@ -82,10 +84,10 @@ public class PublicEventController {
      * @return {@link ResponseEntity} содержащий объект {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */
     @GetMapping("/{id}")
-    public ResponseEntity<EventFullDto> getEvent(@PathVariable Long id) {
+    public ResponseEntity<EventFullDto> getEvent(HttpServletRequest request, @PathVariable Long id) {
         log.info("Endpoint GET /events/{} has been reached", id);
         EventFullDto event = eventService.getById(id);
-        statisticsService.recordRequest("/events/" + id, 1);
+        statisticClient.hitStatistic("ewm-service", "/events" + id, request.getRemoteAddr(), LocalDateTime.now());
         log.info("Event {} fetched successfully", event.getId());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }

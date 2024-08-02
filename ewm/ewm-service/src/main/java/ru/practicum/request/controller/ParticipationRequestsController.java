@@ -47,7 +47,7 @@ public class ParticipationRequestsController {
      * Если у события достигнут лимит запросов на участие - необходимо вернуть ошибку (Ожидается код ошибки 409).
      * Если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного.
      *
-     * @param userId id текущего пользователя
+     * @param userId  id текущего пользователя
      * @param eventId id события
      * @return {@link ResponseEntity} содержащий объект {@link ParticipationRequestDto} и статус ответа {@link HttpStatus#CREATED}
      */
@@ -64,7 +64,7 @@ public class ParticipationRequestsController {
     /**
      * Отмена своего запроса на участие в событии.
      *
-     * @param userId id текущего пользователя
+     * @param userId    id текущего пользователя
      * @param requestId id запроса на участие
      * @return {@link ResponseEntity} содержащий объект {@link ParticipationRequestDto} и статус ответа {@link HttpStatus#OK}
      */
@@ -82,7 +82,7 @@ public class ParticipationRequestsController {
      * Получение информации о запросах на участие в событии текущего пользователя.
      * В случае, если по заданным фильтрам не найдено ни одной заявки, возвращает пустой список.
      *
-     * @param userId id текущего пользователя
+     * @param userId  id текущего пользователя
      * @param eventId id события
      * @return {@link ResponseEntity} содержащий список {@link ParticipationRequestDto} и статус ответа {@link HttpStatus#OK}
      */
@@ -104,8 +104,8 @@ public class ParticipationRequestsController {
      * Статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409).
      * Если при подтверждении данной заявки лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить.
      *
-     * @param userId id текущего пользователя
-     * @param eventId id события
+     * @param userId        id текущего пользователя
+     * @param eventId       id события
      * @param updateRequest {@link EventRequestStatusUpdateRequest} Новый статус для заявок на участие в событии текущего пользователя
      * @return {@link ResponseEntity} содержащий обьект {@link EventRequestStatusUpdateResult} и статус ответа {@link HttpStatus#OK}
      */

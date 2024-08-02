@@ -3,9 +3,7 @@ package ru.practicum.event;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.dto.event.EventState;
 
-import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventSpecifications {

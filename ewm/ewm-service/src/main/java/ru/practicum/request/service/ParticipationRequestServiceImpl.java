@@ -17,6 +17,7 @@ import ru.practicum.request.ParticipationRequestRepo;
 import ru.practicum.user.User;
 import ru.practicum.user.service.UserService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,54 +78,46 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public EventRequestStatusUpdateResult updateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) {
         Event event = eventService.getEntityById(eventId);
+
         // Проверка, что пользователь является организатором события
         if (!event.getInitiator().getId().equals(userId)) {
             throw new ConditionNotMetException("Only event initiator can update request status.");
         }
 
-        // Проверка, что количество подтвержденных запросов не превышает лимит
-        long confirmedRequests = repo.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-        if (event.getParticipantLimit() != null &&
-                confirmedRequests >= event.getParticipantLimit() &&
-                updateRequest.getStatus().equals(RequestStatus.CONFIRMED)) {
-            throw new ConditionNotMetException("Participant limit reached. Cannot confirm more requests.");
-        }
-
-        // Обновление статусов запросов
+        Integer limit = event.getParticipantLimit();
         List<ParticipationRequest> requestsToUpdate = repo.findAllById(updateRequest.getRequestIds());
+        boolean noLimitOrModeration = limit == null || limit == 0 || !event.getRequestModeration();
 
         for (ParticipationRequest request : requestsToUpdate) {
-            // Проверка, что заявка находится в состоянии ожидания
             if (!request.getStatus().equals(RequestStatus.PENDING)) {
                 throw new ConditionNotMetException("Only requests in pending status can be updated.");
             }
-
-            request.setStatus(updateRequest.getStatus());
+            if (noLimitOrModeration || (updateRequest.getStatus().equals(RequestStatus.CONFIRMED) && repo.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) < limit)) {
+                request.setStatus(updateRequest.getStatus());
+            } else {
+                request.setStatus(RequestStatus.REJECTED);
+            }
         }
 
         repo.saveAll(requestsToUpdate);
 
-        // Если при подтверждении данной заявки лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить.
-        if (updateRequest.getStatus().equals(RequestStatus.CONFIRMED) && event.getParticipantLimit() != null) {
-            confirmedRequests = repo.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-            if (confirmedRequests >= event.getParticipantLimit()) {
-                List<ParticipationRequest> pendingRequests = repo.findByEventIdAndStatus(eventId, RequestStatus.PENDING);
-                for (ParticipationRequest pendingRequest : pendingRequests) {
-                    pendingRequest.setStatus(RequestStatus.REJECTED);
-                }
-                repo.saveAll(pendingRequests);
-            }
-        }
+        List<ParticipationRequestDto> confirmedRequests = requestsToUpdate.stream()
+                .filter(request -> request.getStatus().equals(RequestStatus.CONFIRMED))
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
 
-        // Формирование результата
-        List<ParticipationRequestDto> updatedRequests = requestsToUpdate.stream()
+        List<ParticipationRequestDto> rejectedRequests = requestsToUpdate.stream()
+                .filter(request -> request.getStatus().equals(RequestStatus.REJECTED))
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
 
         EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
-        result.setUpdatedRequests(updatedRequests);
+        result.setConfirmedRequests(confirmedRequests);
+        result.setRejectedRequests(rejectedRequests);
+
         return result;
     }
 
@@ -139,11 +132,13 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         repo.delete(request);
         return mapper.toDto(request);
     }
+
     @Override
     public ParticipationRequest getEntityById(Long requestId) {
         return repo.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found."));
     }
+
     @Override
     public List<ParticipationRequestDto> getByUserId(Long userId) {
         return repo.findByParticipantId(userId)

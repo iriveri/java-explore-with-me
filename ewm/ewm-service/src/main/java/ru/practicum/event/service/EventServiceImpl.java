@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ConditionNotMetException;
 import ru.practicum.NotFoundException;
 import ru.practicum.category.service.CategoryService;
-import ru.practicum.event.*;
-import ru.practicum.dto.event.EventSort;
-import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.event.*;
+import ru.practicum.event.Event;
+import ru.practicum.event.EventMapper;
+import ru.practicum.event.EventRepo;
+import ru.practicum.event.EventSpecifications;
 import ru.practicum.user.service.UserService;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,16 +65,16 @@ public class EventServiceImpl implements EventService {
 
         // Проверка состояния события для публикации
         if (AdminStateAction.PUBLISH_EVENT.equals(updateEvent.getStateAction()) &&
-                                !EventState.PENDING.equals(event.getState()))
+                !EventState.PENDING.equals(event.getState()))
             throw new ConditionNotMetException("Event can only be published if it is in pending state.");
 
         // Проверка состояния события для отклонения
         if (AdminStateAction.REJECT_EVENT.equals(updateEvent.getStateAction()) &&
-                              EventState.PUBLISHED.equals(event.getState()))
+                EventState.PUBLISHED.equals(event.getState()))
             throw new ConditionNotMetException("Event can only be rejected if it is not published.");
 
         eventMapper.updateEventFromAdminDto(updateEvent, event);
-        return eventMapper.toDto(event);
+        return eventMapper.toDto(repo.save(event));
     }
 
     @Override
@@ -98,18 +98,21 @@ public class EventServiceImpl implements EventService {
             throw new ConditionNotMetException("Event date must be at least two hours from the current time.");
 
         eventMapper.updateEventFromUserDto(updateEvent, event);
-        return eventMapper.toDto(event);
+        return eventMapper.toDto(repo.save(event));
     }
+
     @Override
     public Event getEntityById(Long eventId) {
         return repo.findById(eventId).orElseThrow(() ->
                 new NotFoundException("Event with id=" + eventId + " was not found"));
     }
+
     @Override
     public EventFullDto getById(Long eventId) {
         Event event = getEntityById(eventId);
         return eventMapper.toDto(event);
     }
+
     @Override
     public EventFullDto getById(Long userId, Long eventId) {
         Event event = getEntityById(eventId);
@@ -122,7 +125,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getByUserId(Long userId, int offset, int limit) {
         PageRequest pageRequest = PageRequest.of(offset / limit, limit);
-        List<Event> events = repo.findByInitiatorId(userId,pageRequest);
+        List<Event> events = repo.findByInitiatorId(userId, pageRequest);
         return events.stream().map(eventMapper::toShortDto).collect(Collectors.toList());
     }
 

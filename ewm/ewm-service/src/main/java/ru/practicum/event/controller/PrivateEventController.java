@@ -100,8 +100,8 @@ public class PrivateEventController {
      * Изменить можно только отмененные события или события в состоянии ожидания модерации (Ожидается код ошибки 409).
      * Дата и время, на которые намечено событие, не могут быть раньше, чем через два часа от текущего момента (Ожидается код ошибки 409).
      *
-     * @param userId                 id текущего пользователя
-     * @param eventId                id события
+     * @param userId             id текущего пользователя
+     * @param eventId            id события
      * @param updateEventUserDto {@link UpdateEventUserDto} данные для обновления события
      * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */

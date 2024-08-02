@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.event.UpdateEventAdminDto;
 import ru.practicum.event.service.EventService;
 
@@ -34,13 +34,13 @@ public class AdminEventController {
      * Эндпоинт возвращает полную информацию обо всех событиях подходящих под переданные условия.
      * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список.
      *
-     * @param users список id пользователей, чьи события нужно найти
-     * @param states список состояний, в которых находятся искомые события
+     * @param users      список id пользователей, чьи события нужно найти
+     * @param states     список состояний, в которых находятся искомые события
      * @param categories список id категорий, в которых будет вестись поиск
      * @param rangeStart дата и время не раньше которых должно произойти событие
-     * @param rangeEnd дата и время не позже которых должно произойти событие
-     * @param from количество событий, которые нужно пропустить для формирования текущего набора
-     * @param size количество событий в наборе
+     * @param rangeEnd   дата и время не позже которых должно произойти событие
+     * @param from       количество событий, которые нужно пропустить для формирования текущего набора
+     * @param size       количество событий в наборе
      * @return {@link ResponseEntity} содержащий список {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */
     @GetMapping
@@ -68,7 +68,7 @@ public class AdminEventController {
      * Событие можно публиковать, только если оно в состоянии ожидания публикации (Ожидается код ошибки 409)
      * Событие можно отклонить, только если оно еще не опубликовано (Ожидается код ошибки 409)
      *
-     * @param eventId id события
+     * @param eventId             id события
      * @param updateEventAdminDto {@link UpdateEventAdminDto} данные для изменения информации о событии
      * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */

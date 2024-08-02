@@ -13,6 +13,4 @@ public class EventRequestStatusUpdateResult {
     List<ParticipationRequestDto> confirmedRequests;
     List<ParticipationRequestDto> rejectedRequests;
 
-    public void setUpdatedRequests(List<ParticipationRequestDto> updatedRequests) {
-    }
 }

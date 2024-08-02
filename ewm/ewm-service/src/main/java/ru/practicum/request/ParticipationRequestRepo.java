@@ -2,14 +2,12 @@ package ru.practicum.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.practicum.dto.requests.RequestStatus;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public interface ParticipationRequestRepo extends JpaRepository<ParticipationRequest,Long> {
+public interface ParticipationRequestRepo extends JpaRepository<ParticipationRequest, Long> {
     boolean existsByParticipantIdAndEventId(Long userId, Long eventId);
 
     Integer countByEventId(Long eventId);

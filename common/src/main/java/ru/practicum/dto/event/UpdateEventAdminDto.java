@@ -1,11 +1,12 @@
 package ru.practicum.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +18,7 @@ public class UpdateEventAdminDto {
     Long category;
     @Size(min = 20, max = 7000)
     String description;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
     LocationDto locationDto;
     Boolean paid;
@@ -25,7 +26,6 @@ public class UpdateEventAdminDto {
     Integer participantLimit;
     Boolean requestModeration;
     AdminStateAction stateAction;
-    @Max(120)
-    @Min(3)
+    @Size(min = 3, max = 120)
     String title;
 }
