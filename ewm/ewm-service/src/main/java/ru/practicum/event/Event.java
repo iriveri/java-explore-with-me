@@ -1,34 +1,60 @@
 package ru.practicum.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.dto.EventState;
+import ru.practicum.category.Category;
+import ru.practicum.dto.event.EventState;
+import ru.practicum.event.location.Location;
+import ru.practicum.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "event")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String annotation;
-    Long category_id;
-    Long confirmed_requests;
-    LocalDateTime created_on;
-    String description;
-    LocalDateTime event_date;
-    Long initiator_id;
-    Long location_id;
-    Boolean paid;
-    Integer participant_limit;
-    LocalDateTime published_on;
-    Boolean request_moderation;
-    EventState state;
-    String title;
-    Long views;
+    private Long id;
 
+    private String annotation;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    private Long confirmedRequests;
+
+    private LocalDateTime createdOn;
+
+    private String description;
+
+    private LocalDateTime eventDate;
+
+    @ManyToOne
+    @JoinColumn(name = "initiator_id")
+    private User initiator;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    private Boolean paid;
+
+    private Integer participantLimit;
+
+    private LocalDateTime publishedOn;
+
+    private Boolean requestModeration;
+
+    @Enumerated(EnumType.STRING)
+    private EventState state;
+
+    private String title;
+
+    private Long views;
 }
