@@ -1,4 +1,4 @@
-package ru.practicum.compilation;
+package ru.practicum.request;
 
 public class RequestControllersValidationTest {
 }

@@ -1,4 +1,4 @@
-package ru.practicum.compilation;
+package ru.practicum.user;
 
 public class UserControllersValidationTest {
 }

@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.EventState;
+import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.UpdateEventAdminRequest;
+import ru.practicum.dto.event.UpdateEventAdminDto;
 import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
@@ -56,7 +56,7 @@ public class AdminEventController {
         log.debug("Endpoint GET /admin/events has been reached with users: {}, states: {}, categories: {}, rangeStart: {}, rangeEnd: {}, from: {}, size: {}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
 
-        List<EventFullDto> events = eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        List<EventFullDto> events = eventService.getAll(users, states, categories, rangeStart, rangeEnd, from, size);
         log.info("Events list for admin role fetched successfully with {} events", events.size());
 
         return new ResponseEntity<>(events, HttpStatus.OK);
@@ -69,17 +69,17 @@ public class AdminEventController {
      * Событие можно отклонить, только если оно еще не опубликовано (Ожидается код ошибки 409)
      *
      * @param eventId id события
-     * @param updateEventAdminRequest {@link UpdateEventAdminRequest} данные для изменения информации о событии
+     * @param updateEventAdminDto {@link UpdateEventAdminDto} данные для изменения информации о событии
      * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
      */
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateEvent(
             @PathVariable Long eventId,
-            @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
+            @Valid @RequestBody UpdateEventAdminDto updateEventAdminDto) {
 
-        log.debug("Endpoint PATCH /admin/events/{} has been reached with UpdateEventAdminRequest: {}", eventId, updateEventAdminRequest);
+        log.debug("Endpoint PATCH /admin/events/{} has been reached with UpdateEventAdminRequest: {}", eventId, updateEventAdminDto);
 
-        EventFullDto updatedEvent = eventService.updateEvent(eventId, updateEventAdminRequest);
+        EventFullDto updatedEvent = eventService.update(eventId, updateEventAdminDto);
         log.info("Event {} status was changed successfully", eventId);
 
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);

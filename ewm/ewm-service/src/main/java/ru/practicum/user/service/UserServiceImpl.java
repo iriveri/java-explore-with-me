@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.NotFoundException;
 import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
@@ -27,12 +28,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto create(NewUserDto newUser) {
         User user = mapper.fromDto(newUser);
         return mapper.toDto(repo.save(user));
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         if (!repo.existsById(userId))
             throw new NotFoundException("User with id=" + userId + " was not found");

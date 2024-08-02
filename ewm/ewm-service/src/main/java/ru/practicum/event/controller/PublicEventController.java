@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatisticsService;
-import ru.practicum.dto.EventSort;
+import ru.practicum.dto.event.EventSort;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.event.service.EventService;
@@ -66,7 +66,7 @@ public class PublicEventController {
                         " rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
 
-        List<EventShortDto> events = eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        List<EventShortDto> events = eventService.getAll(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         statisticsService.recordRequest("/events", events.size());
         log.info("Event's list fetched successfully with {} events", events.size());
         return new ResponseEntity<>(events, HttpStatus.OK);
@@ -84,7 +84,7 @@ public class PublicEventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventFullDto> getEvent(@PathVariable Long id) {
         log.info("Endpoint GET /events/{} has been reached", id);
-        EventFullDto event = eventService.getEvent(id);
+        EventFullDto event = eventService.getById(id);
         statisticsService.recordRequest("/events/" + id, 1);
         log.info("Event {} fetched successfully", event.getId());
         return new ResponseEntity<>(event, HttpStatus.OK);

@@ -3,7 +3,6 @@ package ru.practicum.dto.requests;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.dto.requestStatus;
 
 import java.util.List;
 
@@ -12,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EventRequestStatusUpdateRequest {
 
-    List<Integer> requestIds;
-    requestStatus status;
+    List<Long> requestIds;
+    RequestStatus status;
 }
