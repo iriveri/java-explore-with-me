@@ -119,7 +119,7 @@ class EventControllersValidationTest {
     public void testAdminUpdateEvent() throws Exception {
         // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:01\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:01\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
                 "\"title\": \"Valid title\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/events/1")
@@ -129,7 +129,7 @@ class EventControllersValidationTest {
 
         // Invalid annotation
         String invalidAnnotationRequest = "{ \"annotation\": \"Short\", \"category\": 1, \"description\": \"Valid description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
                 "\"title\": \"Valid title\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/events/1")
@@ -139,7 +139,7 @@ class EventControllersValidationTest {
 
         // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
                 "\"title\": \"Ti\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/events/1")
@@ -149,7 +149,7 @@ class EventControllersValidationTest {
 
         // Invalid stateAction
         String invalidStateActionRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"INVALID_ACTION\", " +
                 "\"title\": \"Valid title\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/events/1")
@@ -186,7 +186,7 @@ class EventControllersValidationTest {
     public void testAddEvent() throws Exception {
         // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Valid title\" }";
         mockMvc.perform(MockMvcRequestBuilders.post("/users/1/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -196,7 +196,7 @@ class EventControllersValidationTest {
 
         // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Ti\" }";
         mockMvc.perform(MockMvcRequestBuilders.post("/users/1/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -221,7 +221,7 @@ class EventControllersValidationTest {
     public void testUpdateEvent() throws Exception {
         // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Valid title\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/1/events/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -230,7 +230,7 @@ class EventControllersValidationTest {
 
         // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
-                "\"eventDate\": \"2025-01-01 00:00:00\", \"locationDto\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
+                "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Ti\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/1/events/1")
                         .contentType(MediaType.APPLICATION_JSON)
