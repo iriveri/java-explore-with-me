@@ -14,6 +14,7 @@ import ru.practicum.event.Event;
 import ru.practicum.event.EventMapper;
 import ru.practicum.event.EventRepo;
 import ru.practicum.event.EventSpecifications;
+import ru.practicum.event.location.LocationMapper;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final CategoryService categoryService;
     private final EventMapper eventMapper;
+
 
     @Autowired
     public EventServiceImpl(EventRepo eventRepository, UserService userService,
@@ -72,6 +74,9 @@ public class EventServiceImpl implements EventService {
         if (AdminStateAction.REJECT_EVENT.equals(updateEvent.getStateAction()) &&
                 EventState.PUBLISHED.equals(event.getState()))
             throw new ConditionNotMetException("Event can only be rejected if it is not published.");
+
+        if(updateEvent.getCategory()!=null)
+            event.setCategory(categoryService.getEntityById(updateEvent.getCategory()));
 
         eventMapper.updateEventFromAdminDto(updateEvent, event);
         return eventMapper.toDto(repo.save(event));

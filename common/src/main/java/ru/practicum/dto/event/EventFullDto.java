@@ -32,7 +32,7 @@ public class EventFullDto {
     @Valid
     UserShortDto initiator;
     @NotNull
-    LocationDto locationDto;
+    LocationDto location;
     @NotNull
     Boolean paid;
     Integer participantLimit;

@@ -64,6 +64,4 @@ public class UserServiceImpl implements UserService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
-
-
 }

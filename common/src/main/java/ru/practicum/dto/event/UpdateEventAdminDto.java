@@ -20,7 +20,7 @@ public class UpdateEventAdminDto {
     String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
-    LocationDto locationDto;
+    LocationDto location;
     Boolean paid;
     @Positive
     Integer participantLimit;

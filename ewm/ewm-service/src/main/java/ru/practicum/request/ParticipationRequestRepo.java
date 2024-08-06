@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ParticipationRequestRepo extends JpaRepository<ParticipationRequest, Long> {
+
     boolean existsByParticipantIdAndEventId(Long userId, Long eventId);
 
     Integer countByEventId(Long eventId);
@@ -17,7 +18,4 @@ public interface ParticipationRequestRepo extends JpaRepository<ParticipationReq
     List<ParticipationRequest> findByParticipantId(Long userId);
 
     List<ParticipationRequest> findByEventId(Long eventId);
-
-
-    List<ParticipationRequest> findByEventIdAndStatus(Long eventId, RequestStatus pending);
 }
