@@ -10,7 +10,6 @@ import ru.practicum.dto.user.UserDto;
 import ru.practicum.user.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +41,7 @@ public class AdminUserController {
     public ResponseEntity<List<UserDto>> getUsers(
             @RequestParam(value = "ids", required = false) Optional<List<Long>> ids,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /admin/users has been reached with ids: {}, from: {}, size: {}", ids, from, size);
         List<UserDto> users = userService.getAll(Collections.emptyList(), from, size);

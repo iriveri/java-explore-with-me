@@ -12,7 +12,6 @@ import ru.practicum.dto.event.UpdateEventAdminDto;
 import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +50,7 @@ public class AdminEventController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /admin/events has been reached with users: {}, states: {}, categories: {}, rangeStart: {}, rangeEnd: {}, from: {}, size: {}",
                 users, states, categories, rangeStart, rangeEnd, from, size);

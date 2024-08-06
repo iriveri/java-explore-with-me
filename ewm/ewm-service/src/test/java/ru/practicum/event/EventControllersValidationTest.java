@@ -109,10 +109,6 @@ class EventControllersValidationTest {
                         .param("size", "-10"))
                 .andExpect(status().isBadRequest());
 
-        // Test with out of range 'size'
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/events")
-                        .param("size", "101"))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -176,10 +172,6 @@ class EventControllersValidationTest {
                         .param("size", "-10"))
                 .andExpect(status().isBadRequest());
 
-        // Test with out of range 'size'
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events")
-                        .param("size", "101"))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -263,10 +255,6 @@ class EventControllersValidationTest {
                         .param("size", "-10"))
                 .andExpect(status().isBadRequest());
 
-        // Test with out of range 'size'
-        mockMvc.perform(MockMvcRequestBuilders.get("/events")
-                        .param("size", "101"))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -13,7 +13,6 @@ import ru.practicum.dto.event.EventSort;
 import ru.practicum.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,7 +61,7 @@ public class PublicEventController {
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(required = false) EventSort sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Endpoint GET /events has been reached with " +
                         "text: {}, categories: {}, paid: {}, rangeStart: {}," +
                         " rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}",

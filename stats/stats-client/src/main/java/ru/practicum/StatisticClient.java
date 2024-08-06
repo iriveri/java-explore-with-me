@@ -5,6 +5,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.dto.statistics.EndpointHitDto;
 import ru.practicum.dto.statistics.ViewStatsDto;
 
@@ -21,7 +22,7 @@ public class StatisticClient {
     @Autowired
     public StatisticClient() {
         this.restTemplate = new RestTemplate();
-        this.serverUrl = "./stats/stats-server";
+        this.serverUrl = "http://localhost:9090";
     }
 
     public void hitStatistic(String app, String uri, String ip, LocalDateTime timestamp) {
@@ -44,18 +45,19 @@ public class StatisticClient {
         headers.set("Content-Type", "application/json");
 
         // Добавляем параметры запроса
-        HttpHeaders params = new HttpHeaders();
-        params.set("start", start.toString());
-        params.set("end", end.toString());
-        params.set("unique", Boolean.toString(unique));
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("start", start.toString())
+                .queryParam("end", end.toString())
+                .queryParam("unique", unique);
+
         if (uris != null && !uris.isEmpty()) {
-            params.set("uris", String.join(",", uris));
+            uriBuilder.queryParam("uris", String.join(",", uris));
         }
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(url, HttpMethod.GET, request,
+        ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request,
                 new ParameterizedTypeReference<List<ViewStatsDto>>() {
-                }, params);
+                });
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             return response.getBody();
@@ -64,5 +66,4 @@ public class StatisticClient {
             return List.of();
         }
     }
-
 }

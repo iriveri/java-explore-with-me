@@ -117,6 +117,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getById(Long eventId) {
         Event event = getEntityById(eventId);
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new ConditionNotMetException("User is not the initiator of the event");
+        }
         return eventMapper.toDto(event);
     }
 

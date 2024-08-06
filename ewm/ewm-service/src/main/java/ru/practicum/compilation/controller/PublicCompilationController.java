@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class PublicCompilationController {
     public ResponseEntity<List<CompilationDto>> getCompilations(
             @RequestParam(value = "pinned", required = false) Optional<Boolean> pinned,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /compilations has been reached with pinned: {}, from: {}, size: {}",
                 pinned.orElse(null), from, size);

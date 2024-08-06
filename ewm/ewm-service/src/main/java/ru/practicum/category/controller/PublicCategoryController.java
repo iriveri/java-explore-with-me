@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class PublicCategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCategories(
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /categories has been reached with from: {}, size: {}", from, size);
         List<CategoryDto> categories = categoryService.getAll(from, size);

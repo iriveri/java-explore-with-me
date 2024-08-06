@@ -13,7 +13,6 @@ import ru.practicum.dto.event.UpdateEventUserDto;
 import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,7 +42,7 @@ public class PrivateEventController {
     public ResponseEntity<List<EventShortDto>> getUserEvents(
             @PathVariable Long userId,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-            @RequestParam(value = "size", defaultValue = "10") @Min(1) @Max(100) int size) {
+            @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /users/{}/events has been reached with from: {}, size: {}", userId, from, size);
         List<EventShortDto> events = eventService.getByUserId(userId, from, size);
