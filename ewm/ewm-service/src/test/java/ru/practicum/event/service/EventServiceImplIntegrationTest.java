@@ -117,9 +117,9 @@ public class EventServiceImplIntegrationTest {
     @Test
     public void testGetById() {
         EventFullDto createdEvent = eventService.create(userId, newEventDto);
-        UpdateEventAdminDto dto =new UpdateEventAdminDto();
+        UpdateEventAdminDto dto = new UpdateEventAdminDto();
         dto.setStateAction(AdminStateAction.PUBLISH_EVENT);
-        eventService.update(createdEvent.getId(),dto);
+        eventService.update(createdEvent.getId(), dto);
         EventFullDto foundEvent = eventService.getById(createdEvent.getId());
 
         assertThat(foundEvent).isNotNull();
