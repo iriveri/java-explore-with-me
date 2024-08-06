@@ -2,7 +2,8 @@ package ru.practicum.event;
 
 import org.mapstruct.*;
 import ru.practicum.dto.event.*;
-import ru.practicum.event.location.Location;
+
+import java.time.LocalDateTime;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -27,10 +28,8 @@ public interface EventMapper {
 
         if (updateEvent.getLocation() != null) {
             var locationDto = updateEvent.getLocation();
-            var location = new Location();
-            location.setLat(locationDto.getLat());
-            location.setLon(locationDto.getLon());
-            event.setLocation(location);
+            event.setLat(locationDto.getLat());
+            event.setLon(locationDto.getLon());
         }
 
         if (updateEvent.getPaid() != null)
@@ -52,6 +51,7 @@ public interface EventMapper {
                     break;
                 case PUBLISH_EVENT:
                     event.setState(EventState.PUBLISHED);
+                    event.setPublishedOn(LocalDateTime.now());
                     break;
             }
         }
@@ -71,10 +71,8 @@ public interface EventMapper {
 
         if (updateEvent.getLocation() != null) {
             var locationDto = updateEvent.getLocation();
-            var location = new Location();
-            location.setLat(locationDto.getLat());
-            location.setLon(locationDto.getLon());
-            event.setLocation(location);
+            event.setLat(locationDto.getLat());
+            event.setLon(locationDto.getLon());
         }
 
         if (updateEvent.getPaid() != null)

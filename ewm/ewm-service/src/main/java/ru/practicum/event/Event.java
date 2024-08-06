@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.category.Category;
 import ru.practicum.dto.event.EventState;
-import ru.practicum.event.location.Location;
 import ru.practicum.user.User;
 
 import javax.persistence.*;
@@ -39,9 +38,9 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     private User initiator;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id")
-    private Location location;
+    private float lat;
+
+    private float lon;
 
     private Boolean paid;
 
