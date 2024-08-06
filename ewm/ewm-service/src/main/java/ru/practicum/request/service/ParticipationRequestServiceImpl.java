@@ -57,7 +57,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         }
 
         // Проверка на лимит запросов на участие
-        if (event.getParticipantLimit() != null &&
+        if (event.getParticipantLimit() != null && event.getParticipantLimit() != 0 &&
                 repo.countByEventId(eventId) >= event.getParticipantLimit()) {
             throw new ConditionNotMetException("Participant limit reached.");
         }

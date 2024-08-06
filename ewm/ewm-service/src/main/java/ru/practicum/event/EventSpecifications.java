@@ -16,6 +16,7 @@ public class EventSpecifications {
             String likePattern = "%" + text.toLowerCase() + "%";
             return cb.or(
                     cb.like(cb.lower(root.get("annotation")), likePattern),
+                    cb.like(cb.lower(root.get("title")), likePattern),
                     cb.like(cb.lower(root.get("description")), likePattern)
             );
         };

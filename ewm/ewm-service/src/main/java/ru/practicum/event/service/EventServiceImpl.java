@@ -14,7 +14,6 @@ import ru.practicum.event.Event;
 import ru.practicum.event.EventMapper;
 import ru.practicum.event.EventRepo;
 import ru.practicum.event.EventSpecifications;
-import ru.practicum.event.location.LocationMapper;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -75,7 +74,7 @@ public class EventServiceImpl implements EventService {
                 EventState.PUBLISHED.equals(event.getState()))
             throw new ConditionNotMetException("Event can only be rejected if it is not published.");
 
-        if(updateEvent.getCategory()!=null)
+        if (updateEvent.getCategory() != null)
             event.setCategory(categoryService.getEntityById(updateEvent.getCategory()));
 
         eventMapper.updateEventFromAdminDto(updateEvent, event);
@@ -101,6 +100,9 @@ public class EventServiceImpl implements EventService {
         if (updateEvent.getEventDate() != null &&
                 updateEvent.getEventDate().isBefore(LocalDateTime.now().plusHours(2)))
             throw new ConditionNotMetException("Event date must be at least two hours from the current time.");
+
+        if (updateEvent.getCategory() != null)
+            event.setCategory(categoryService.getEntityById(updateEvent.getCategory()));
 
         eventMapper.updateEventFromUserDto(updateEvent, event);
         return eventMapper.toDto(repo.save(event));

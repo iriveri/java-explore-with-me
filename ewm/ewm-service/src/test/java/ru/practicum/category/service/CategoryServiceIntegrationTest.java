@@ -1,8 +1,5 @@
 package ru.practicum.category.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +17,10 @@ import ru.practicum.dto.category.UpdateCategoryDto;
 import ru.practicum.event.EventRepo;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
 
-
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @Transactional // Обеспечивает откат транзакций после каждого теста

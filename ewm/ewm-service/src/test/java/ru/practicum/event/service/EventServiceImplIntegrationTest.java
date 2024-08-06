@@ -1,7 +1,5 @@
 package ru.practicum.event.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +16,11 @@ import ru.practicum.event.EventRepo;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
@@ -52,7 +51,7 @@ public class EventServiceImplIntegrationTest {
     public void setUp() {
 // Инициализация пользователя и категории для тестов
 
-        userId = userService.create(new NewUserDto("just.bob@bobs.ru","MR.BOBS")).getId();
+        userId = userService.create(new NewUserDto("just.bob@bobs.ru", "MR.BOBS")).getId();
         categoryId = categoryService.create(new NewCategoryDto("Pizza")).getId();
 
         newEventDto = new NewEventDto();
@@ -135,6 +134,7 @@ public class EventServiceImplIntegrationTest {
         assertThat(foundEvent).isNotNull();
         assertThat(foundEvent.getInitiator().getId()).isEqualTo(userId);
     }
+
     @Test
     public void testGetAllWithFilters() {
         List<EventFullDto> events = eventService.getAll(

@@ -1,9 +1,5 @@
 package ru.practicum.user.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +7,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.NotFoundException;
+import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
 import ru.practicum.user.User;
 import ru.practicum.user.UserMapper;
 import ru.practicum.user.UserRepo;
-import ru.practicum.dto.user.NewUserDto;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
