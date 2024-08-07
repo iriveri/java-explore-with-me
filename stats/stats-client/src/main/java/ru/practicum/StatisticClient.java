@@ -1,11 +1,14 @@
 package ru.practicum;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 import ru.practicum.dto.statistics.ViewStatsDto;
 
 import java.time.LocalDateTime;
@@ -13,39 +16,43 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@Slf4j
 public class StatisticClient {
 
-    private final RestTemplate restTemplate;
-    private final String serverUrl;
+    private final WebClient webClient;
 
 
-    @Autowired
-    public StatisticClient(RestTemplate restTemplate, String serverUrl) {
-        this.restTemplate = restTemplate;
-        this.serverUrl = "http://localhost:9090";
+    public StatisticClient(@Autowired WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public void hitStatistic(String app, String uri, String ip, LocalDateTime timestamp) {
-        String url = serverUrl + "/hit";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String hitData = "{ \"app\": \"" + app + "\", \"uri\": \"" + uri + "\", \"ip\": \"" + ip + "\", \"timestamp\": \"" + timestamp.format(formatter) + "\" }";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        HttpEntity<String> request = new HttpEntity<>(hitData, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-        if (response.getStatusCode().equals(HttpStatus.CREATED)) {
-            // Логирование или обработка успешного ответа
-        } else {
-            // Логирование или обработка неуспешного ответа
-        }
+
+        String url = "/hit";
+
+
+        webClient.post()
+                .uri(url)
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .bodyValue(hitData)
+                .retrieve()
+                .onStatus(HttpStatus::is2xxSuccessful, clientResponse -> {
+                    // Логирование или обработка успешного ответа
+                    return Mono.empty(); // Успешный ответ
+                })
+                .onStatus(HttpStatus::isError, clientResponse -> {
+                    // Логирование или обработка неуспешного ответа
+                    return Mono.error(new RuntimeException("Ошибка при отправке данных"));
+                })
+                .bodyToMono(String.class)
+                .block();
     }
 
     public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        String url = serverUrl + "/stats";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
+        String url = "/stats";
 
-        // Добавляем параметры запроса
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("start", start.toString())
                 .queryParam("end", end.toString())
@@ -55,16 +62,15 @@ public class StatisticClient {
             uriBuilder.queryParam("uris", String.join(",", uris));
         }
 
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request,
-                new ParameterizedTypeReference<List<ViewStatsDto>>() {
-                });
 
-        if (response.getStatusCode().equals(HttpStatus.OK)) {
-            return response.getBody();
-        } else {
-            // Логирование или обработка неуспешного ответа
-            return List.of();
-        }
+        return webClient.get()
+                .uri(uriBuilder.toUriString())
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<ViewStatsDto>>() {
+                })
+                .doOnError(error -> log.error("Error retrieving statistics for start: {}, end: {}", start, end))
+                .doOnSuccess(response -> log.info("Statistics response: {}", response))
+                .block(); // Блокируем для получения результата
     }
 }
