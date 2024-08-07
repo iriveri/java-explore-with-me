@@ -25,6 +25,7 @@ public class PublicEventController {
 
     private final EventService eventService;
     private final StatisticClient statisticClient;
+    private final String pattern = "yyyy-MM-dd HH:mm:ss";
 
     public PublicEventController(EventService eventService, StatisticClient statisticClient) {
         this.eventService = eventService;
@@ -56,8 +57,8 @@ public class PublicEventController {
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+            @RequestParam(required = false) @DateTimeFormat(pattern = pattern) LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = pattern) LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(required = false) EventSort sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,

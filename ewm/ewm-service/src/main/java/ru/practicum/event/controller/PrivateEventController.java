@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.NewEventDto;
@@ -66,7 +65,7 @@ public class PrivateEventController {
         log.debug("Endpoint POST /users/{}/events has been reached with NewEventDto: {}", userId, newEventDto);
 
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new ConditionNotMetException("Field: eventDate. Error: должно содержать дату," +
+            throw new RuntimeException("Field: eventDate. Error: должно содержать дату," +
                     " которая еще не наступила. Value: " + newEventDto.getEventDate().toString());
         }
 

@@ -44,7 +44,7 @@ public class AdminUserController {
             @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
 
         log.debug("Endpoint GET /admin/users has been reached with ids: {}, from: {}, size: {}", ids, from, size);
-        List<UserDto> users = userService.getAll(Collections.emptyList(), from, size);
+        List<UserDto> users = userService.getAll(ids.orElse(Collections.emptyList()), from, size);
         log.info("Users fetched successfully");
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

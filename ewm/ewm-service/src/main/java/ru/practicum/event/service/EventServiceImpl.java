@@ -18,7 +18,6 @@ import ru.practicum.event.EventSpecifications;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,7 +123,8 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException("Event not yet published");
         }
         var dto = eventMapper.toDto(event);
-        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), Collections.emptyList(), false).size());
+        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/event" + eventId
+        ), false).size());
         return eventMapper.toDto(event);
     }
 
