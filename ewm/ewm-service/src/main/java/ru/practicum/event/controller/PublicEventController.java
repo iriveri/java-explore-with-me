@@ -14,7 +14,6 @@ import ru.practicum.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -64,10 +63,13 @@ public class PublicEventController {
             @RequestParam(required = false) EventSort sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,
             @RequestParam(defaultValue = "10") @Min(1) int size) {
-        for (var category : categories) {
-            if (category <= 0)
-                throw new RuntimeException("Id cant be less than 0");
+        if (categories != null) {
+            for (var category : categories) {
+                if (category <= 0)
+                    throw new RuntimeException("Id cant be less than 0");
+            }
         }
+
         log.debug("Endpoint GET /events has been reached with " +
                         "text: {}, categories: {}, paid: {}, rangeStart: {}," +
                         " rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}",
