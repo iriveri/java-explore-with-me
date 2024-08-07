@@ -127,10 +127,14 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException("Event not yet published");
         }
         var dto = eventMapper.toDto(event);
-        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/events/" + eventId
-        ), false).size());
+        var stats = statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/events/" + eventId), false);
+        if (!stats.isEmpty()) {
+            dto.setViews(stats.get(0).getHits());
+        } else {
+            dto.setViews(0L);
+        }
         dto.setConfirmedRequests(participationRequestRepo.countByEventIdAndStatus(dto.getId(), RequestStatus.CONFIRMED));
-        return eventMapper.toDto(event);
+        return dto;
     }
 
     @Override

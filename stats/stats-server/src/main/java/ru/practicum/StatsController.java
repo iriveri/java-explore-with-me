@@ -36,7 +36,7 @@ public class StatsController {
      * @return {@link ResponseEntity} содержащий "Информация сохранена" и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping("/hit")
-    public ResponseEntity<String> createRecord(@RequestBody @Valid EndpointHitDto newData) {
+    public ResponseEntity<String> createRecord(@RequestBody EndpointHitDto newData) {
         log.debug("Endpoint POST /hit has been reached by {}", newData.toString());
         service.createRecord(newData);
         log.info("New statistics created about {}", newData.getApp());
@@ -74,6 +74,7 @@ public class StatsController {
                 start, end, uris.orElse(List.of("Empty")), unique);
 
         List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of()), unique);
+        List<ViewStatsDto> ss = service.getStatistics(start, end, List.of(), unique);
         log.info("Statistics about {} uris fetched successfully", uris.orElse(List.of("all")));
         return ResponseEntity.ok(stats);
     }
