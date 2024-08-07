@@ -1,5 +1,6 @@
 package ru.practicum;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +25,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(DataAccessException e) {
+        ApiError apiError = new ApiError(
+                HttpStatus.CONFLICT,
+                "Constraint not met",
+                e.getMessage(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(ConditionNotMetException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(ConditionNotMetException e) {
         ApiError apiError = new ApiError(
@@ -43,7 +55,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 LocalDateTime.now(),
                 null);
-        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
