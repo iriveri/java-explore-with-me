@@ -36,7 +36,7 @@ public class StatsController {
      * @return {@link ResponseEntity} содержащий "Информация сохранена" и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping("/hit")
-    public ResponseEntity<String> createRecord(@Valid @RequestBody EndpointHitDto newData) {
+    public ResponseEntity<String> createRecord(@RequestBody @Valid EndpointHitDto newData) {
         log.debug("Endpoint POST /hit has been reached by {}", newData.toString());
         service.createRecord(newData);
         log.info("New statistics created about {}", newData.getApp());

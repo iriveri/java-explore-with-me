@@ -87,7 +87,7 @@ public class PublicEventController {
     public ResponseEntity<EventFullDto> getEvent(HttpServletRequest request, @PathVariable Long id) {
         log.info("Endpoint GET /events/{} has been reached", id);
         EventFullDto event = eventService.getById(id);
-        statisticClient.hitStatistic("ewm-service", "/events" + id, request.getRemoteAddr(), LocalDateTime.now());
+        statisticClient.hitStatistic("ewm-service", "/events/" + id, request.getRemoteAddr(), LocalDateTime.now());
         log.info("Event {} fetched successfully", event.getId());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }

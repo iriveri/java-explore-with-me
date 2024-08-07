@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 import ru.practicum.dto.statistics.ViewStatsDto;
 
@@ -51,20 +50,18 @@ public class StatisticClient {
     }
 
     public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        String url = "/stats";
 
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("start", start.toString())
-                .queryParam("end", end.toString())
-                .queryParam("unique", unique);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String url = "/stats?start=" + start.format(formatter) + "&end=" + end.format(formatter) + "&unique=" + unique;
+
 
         if (uris != null && !uris.isEmpty()) {
-            uriBuilder.queryParam("uris", String.join(",", uris));
+            url = url + "&uris=" + String.join(",", uris);
+
         }
 
-
         return webClient.get()
-                .uri(uriBuilder.toUriString())
+                .uri(url)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<ViewStatsDto>>() {
