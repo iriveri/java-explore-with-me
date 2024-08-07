@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class NewUserDto {
     @NotBlank
     @Email
-    @Size(min=6, max =254)
+    @Size(min = 6, max = 254)
     String email;
     @NotBlank
     @Size(min = 2, max = 250)
