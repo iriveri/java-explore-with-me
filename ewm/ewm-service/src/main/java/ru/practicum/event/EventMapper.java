@@ -1,17 +1,24 @@
 package ru.practicum.event;
 
 import org.mapstruct.*;
+import ru.practicum.category.CategoryMapper;
 import ru.practicum.dto.event.*;
+import ru.practicum.user.UserMapper;
 
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {CategoryMapper.class, UserMapper.class})
 public interface EventMapper {
 
     @Mapping(target = "category", ignore = true)
+    @Mapping(source = "location.lat", target = "lat")
+    @Mapping(source = "location.lon", target = "lon")
     Event fromDto(NewEventDto event);
 
+    @Mapping(source = "lat", target = "location.lat")
+    @Mapping(source = "lon", target = "location.lon")
     EventFullDto toDto(Event event);
 
     EventShortDto toShortDto(Event event);

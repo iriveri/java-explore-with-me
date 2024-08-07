@@ -128,7 +128,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         if (!request.getParticipant().getId().equals(userId)) {
             throw new ConditionNotMetException("Request does not belong to user.");
         }
-
+        request.setStatus(RequestStatus.CANCELED);
         repo.delete(request);
         return mapper.toDto(request);
     }
