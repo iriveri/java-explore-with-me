@@ -127,7 +127,7 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException("Event not yet published");
         }
         var dto = eventMapper.toDto(event);
-        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/event" + eventId
+        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/event/" + eventId
         ), false).size());
         dto.setConfirmedRequests(participationRequestRepo.countByEventIdAndStatus(dto.getId(), RequestStatus.CONFIRMED));
         return eventMapper.toDto(event);

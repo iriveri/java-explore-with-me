@@ -12,6 +12,7 @@ import ru.practicum.request.service.ParticipationRequestService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -113,10 +114,10 @@ public class ParticipationRequestsController {
     public ResponseEntity<EventRequestStatusUpdateResult> changeRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
-            @Valid @RequestBody EventRequestStatusUpdateRequest updateRequest) {
+            @Valid @RequestBody(required = false) Optional<EventRequestStatusUpdateRequest> updateRequest) {
 
         log.debug("Endpoint PATCH /users/{}/events/{}/requests has been reached with UpdateRequest: {}", userId, eventId, updateRequest);
-        EventRequestStatusUpdateResult result = participationRequestService.updateStatus(userId, eventId, updateRequest);
+        EventRequestStatusUpdateResult result = participationRequestService.updateStatus(userId, eventId, updateRequest.orElse(new EventRequestStatusUpdateRequest()));
         log.info("Request status for user {} and event {} updated successfully", userId, eventId);
         return ResponseEntity.ok(result);
     }
