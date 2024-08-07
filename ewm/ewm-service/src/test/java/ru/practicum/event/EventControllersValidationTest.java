@@ -77,6 +77,11 @@ class EventControllersValidationTest {
                 anyInt()
         )).thenReturn(Collections.singletonList(shortEvent));
 
+        Mockito.doNothing().when(statisticClient).hitStatistic(
+                anyString(),
+                anyString(),
+                anyString(),
+                any(LocalDateTime.class));
 
     }
 

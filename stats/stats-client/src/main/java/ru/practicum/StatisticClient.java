@@ -6,10 +6,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.practicum.dto.statistics.EndpointHitDto;
 import ru.practicum.dto.statistics.ViewStatsDto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -20,17 +20,18 @@ public class StatisticClient {
 
 
     @Autowired
-    public StatisticClient() {
-        this.restTemplate = new RestTemplate();
+    public StatisticClient(RestTemplate restTemplate, String serverUrl) {
+        this.restTemplate = restTemplate;
         this.serverUrl = "http://localhost:9090";
     }
 
     public void hitStatistic(String app, String uri, String ip, LocalDateTime timestamp) {
         String url = serverUrl + "/hit";
-        EndpointHitDto hitData = new EndpointHitDto(app, uri, ip, timestamp);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String hitData = "{ \"app\": \"" + app + "\", \"uri\": \"" + uri + "\", \"ip\": \"" + ip + "\", \"timestamp\": \"" + timestamp.format(formatter) + "\" }";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        HttpEntity<EndpointHitDto> request = new HttpEntity<>(hitData, headers);
+        HttpEntity<String> request = new HttpEntity<>(hitData, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         if (response.getStatusCode().equals(HttpStatus.CREATED)) {
             // Логирование или обработка успешного ответа
