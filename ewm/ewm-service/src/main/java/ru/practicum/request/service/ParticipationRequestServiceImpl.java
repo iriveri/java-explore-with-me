@@ -57,10 +57,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         }
 
         // Проверка на лимит запросов на участие
-//        if (event.getParticipantLimit() != null && event.getParticipantLimit() != 0 &&
-//                repo.countByEventId(eventId) >= event.getParticipantLimit()) {
-//            throw new ConditionNotMetException("Participant limit reached.");
-//        }
+        if (event.getParticipantLimit() != null && event.getParticipantLimit() != 0 &&
+                repo.countByEventId(eventId) >= event.getParticipantLimit()) {
+            throw new ConditionNotMetException("Participant limit reached.");
+        }
 
         ParticipationRequest participationRequest = new ParticipationRequest();
         participationRequest.setParticipant(user);
@@ -68,7 +68,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         participationRequest.setCreated(LocalDateTime.now());
 
         // Если пре-модерация отключена, запрос автоматически подтвержден
-        if (!event.getRequestModeration()) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             participationRequest.setStatus(RequestStatus.CONFIRMED);
         } else {
             participationRequest.setStatus(RequestStatus.PENDING);
