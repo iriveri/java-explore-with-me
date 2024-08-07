@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ConditionNotMetException;
 import ru.practicum.NotFoundException;
+import ru.practicum.StatisticClient;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.event.*;
 import ru.practicum.event.Event;
@@ -17,6 +18,7 @@ import ru.practicum.event.EventSpecifications;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +29,16 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final CategoryService categoryService;
     private final EventMapper eventMapper;
-
+    private final StatisticClient statisticClient;
 
     @Autowired
     public EventServiceImpl(EventRepo eventRepository, UserService userService,
-                            CategoryService categoryService, EventMapper eventMapper) {
+                            CategoryService categoryService, EventMapper eventMapper, StatisticClient statisticClient) {
         this.repo = eventRepository;
         this.userService = userService;
         this.categoryService = categoryService;
         this.eventMapper = eventMapper;
+        this.statisticClient = statisticClient;
     }
 
     @Override
@@ -120,6 +123,8 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Event not yet published");
         }
+        var dto = eventMapper.toDto(event);
+        dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), Collections.emptyList(), false).size());
         return eventMapper.toDto(event);
     }
 

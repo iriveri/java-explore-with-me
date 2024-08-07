@@ -2,10 +2,14 @@ package ru.practicum.event.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ConditionNotMetException;
+import ru.practicum.StatisticClient;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.event.*;
@@ -21,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 
 
 @SpringBootTest
@@ -43,6 +49,9 @@ public class EventServiceImplIntegrationTest {
     @Autowired
     private EventMapper eventMapper;
 
+    @MockBean
+    StatisticClient statisticClient;
+
     private Long userId;
     private Long categoryId;
     private NewEventDto newEventDto;
@@ -64,6 +73,10 @@ public class EventServiceImplIntegrationTest {
         eventService.create(userId, newEventDto);
         newEventDto.setTitle("Test Event 2");
         eventService.create(userId, newEventDto);
+
+        Mockito.when(statisticClient.getStatistics(any(LocalDateTime.class), any(LocalDateTime.class),
+                anyList(), anyBoolean())).thenReturn(Collections.emptyList());
+        ;
     }
 
     @Test
@@ -102,17 +115,21 @@ public class EventServiceImplIntegrationTest {
         EventFullDto createdEvent = eventService.create(userId, newEventDto);
 
         UpdateEventUserDto updateUserDto = new UpdateEventUserDto();
-        updateUserDto.setEventDate(LocalDateTime.now().plusHours(5)); // Обновляем дату события
+        var expectedDate = LocalDateTime.now().plusHours(5);
+        updateUserDto.setEventDate(expectedDate); // Обновляем дату события
 
         EventFullDto updatedUserEvent = eventService.update(userId, createdEvent.getId(), updateUserDto);
 
         assertThat(updatedUserEvent.getEventDate()).isEqualTo(updateUserDto.getEventDate());
 
-        // Проверяем, что обновление прошло успешно
-        // в базе данных
+        updateUserDto.setEventDate(LocalDateTime.now());
+
+        assertThrows(ConditionNotMetException.class, () -> eventService.update(userId, createdEvent.getId(), updateUserDto));
+
         Event updatedEntity = eventRepo.findById(createdEvent.getId()).orElseThrow();
-        assertThat(updatedEntity.getEventDate()).isEqualTo(updateUserDto.getEventDate());
+        assertThat(updatedEntity.getEventDate()).isEqualTo(expectedDate);
     }
+
 
     @Test
     public void testGetById() {

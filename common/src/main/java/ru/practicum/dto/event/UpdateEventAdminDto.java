@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -18,11 +19,12 @@ public class UpdateEventAdminDto {
     Long category;
     @Size(min = 20, max = 7000)
     String description;
+    @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
     LocationDto location;
     Boolean paid;
-    @Positive
+    @PositiveOrZero
     Integer participantLimit;
     Boolean requestModeration;
     AdminStateAction stateAction;
