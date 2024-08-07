@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 LocalDateTime.now(),
                 null);
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
