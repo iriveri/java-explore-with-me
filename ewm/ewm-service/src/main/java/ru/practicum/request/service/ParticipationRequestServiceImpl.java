@@ -68,7 +68,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         participationRequest.setCreated(LocalDateTime.now());
 
         // Если пре-модерация отключена, запрос автоматически подтвержден
-        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
+        if (!event.getRequestModeration()) {
             participationRequest.setStatus(RequestStatus.CONFIRMED);
         } else {
             participationRequest.setStatus(RequestStatus.PENDING);
@@ -95,7 +95,9 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             if (!request.getStatus().equals(RequestStatus.PENDING)) {
                 throw new ConditionNotMetException("Only requests in pending status can be updated.");
             }
-            if (noLimitOrModeration || (updateRequest.getStatus().equals(RequestStatus.CONFIRMED) && repo.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) < limit)) {
+            if (noLimitOrModeration) {
+                request.setStatus(RequestStatus.CONFIRMED);
+            } else if (updateRequest.getStatus().equals(RequestStatus.CONFIRMED) && repo.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED) < limit) {
                 request.setStatus(updateRequest.getStatus());
             } else {
                 request.setStatus(RequestStatus.REJECTED);

@@ -11,10 +11,12 @@ import ru.practicum.NotFoundException;
 import ru.practicum.StatisticClient;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.event.*;
+import ru.practicum.dto.requests.RequestStatus;
 import ru.practicum.event.Event;
 import ru.practicum.event.EventMapper;
 import ru.practicum.event.EventRepo;
 import ru.practicum.event.EventSpecifications;
+import ru.practicum.request.ParticipationRequestRepo;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -29,15 +31,17 @@ public class EventServiceImpl implements EventService {
     private final CategoryService categoryService;
     private final EventMapper eventMapper;
     private final StatisticClient statisticClient;
+    private final ParticipationRequestRepo participationRequestRepo;
 
     @Autowired
     public EventServiceImpl(EventRepo eventRepository, UserService userService,
-                            CategoryService categoryService, EventMapper eventMapper, StatisticClient statisticClient) {
+                            CategoryService categoryService, EventMapper eventMapper, StatisticClient statisticClient, ParticipationRequestRepo participationRequestRepo) {
         this.repo = eventRepository;
         this.userService = userService;
         this.categoryService = categoryService;
         this.eventMapper = eventMapper;
         this.statisticClient = statisticClient;
+        this.participationRequestRepo = participationRequestRepo;
     }
 
     @Override
@@ -125,6 +129,7 @@ public class EventServiceImpl implements EventService {
         var dto = eventMapper.toDto(event);
         dto.setViews((long) statisticClient.getStatistics(dto.getPublishedOn(), LocalDateTime.now(), List.of("/event" + eventId
         ), false).size());
+        dto.setConfirmedRequests(participationRequestRepo.countByEventIdAndStatus(dto.getId(), RequestStatus.CONFIRMED));
         return eventMapper.toDto(event);
     }
 
@@ -134,6 +139,8 @@ public class EventServiceImpl implements EventService {
         if (!event.getInitiator().getId().equals(userId)) {
             throw new ConditionNotMetException("User is not the initiator of the event");
         }
+        var dto = eventMapper.toDto(event);
+        dto.setConfirmedRequests(participationRequestRepo.countByEventIdAndStatus(dto.getId(), RequestStatus.CONFIRMED));
         return eventMapper.toDto(event);
     }
 
@@ -160,6 +167,7 @@ public class EventServiceImpl implements EventService {
                 .getContent()
                 .stream()
                 .map(eventMapper::toDto)
+                .peek(dto -> dto.setConfirmedRequests(participationRequestRepo.countByEventIdAndStatus(dto.getId(), RequestStatus.CONFIRMED)))
                 .collect(Collectors.toList());
     }
 

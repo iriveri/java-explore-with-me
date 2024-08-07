@@ -70,7 +70,7 @@ public class ParticipationRequestServiceIntegrationTest {
         NewEventDto newEventDto = new NewEventDto();
         newEventDto.setTitle("Test Event");
         newEventDto.setCategory(categoryId);
-        newEventDto.setParticipantLimit(10);
+        newEventDto.setParticipantLimit(1);
         newEventDto.setEventDate(LocalDateTime.now().plusHours(3)); // Устанавливаем дату события через 3 часа
         // Установите другие поля, если они есть
 
