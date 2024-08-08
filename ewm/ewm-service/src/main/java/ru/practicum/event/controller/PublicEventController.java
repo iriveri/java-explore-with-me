@@ -17,6 +17,7 @@ import ru.practicum.dto.event.EventSortOption;
 import ru.practicum.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,7 +68,9 @@ public class PublicEventController {
             @RequestParam(required = false) EventSortOption sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,
             @RequestParam(defaultValue = "10") @Min(1) int size) {
-
+        if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
+            throw new ValidationException("Invalid input: 'end' date is before 'start' date");
+        }
         log.debug("Endpoint GET /events has been reached with " +
                         "text: {}, categories: {}, paid: {}, rangeStart: {}," +
                         " rangeEnd: {}, onlyAvailable: {}, sort: {}, from: {}, size: {}",

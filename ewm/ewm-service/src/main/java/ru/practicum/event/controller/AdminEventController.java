@@ -18,6 +18,7 @@ import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
 import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,7 +58,9 @@ public class AdminEventController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
             @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
-
+        if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
+            throw new ValidationException("Invalid input: 'end' date is before 'start' date");
+        }
         log.debug("Endpoint GET /admin/events has been reached with users: {}, states: {}, categories: {}, rangeStart: {}, rangeEnd: {}, from: {}, size: {}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
 
