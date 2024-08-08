@@ -18,22 +18,37 @@ services:
   stats-db:
     image: postgres:14-alpine
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - stats-db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: stats
       POSTGRES_USER: stats
       POSTGRES_PASSWORD: stats
-
-
 
   ewm-service:
     build:
       context: ./ewm/ewm-service
     ports:
       - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ewm-db:5432/ewm
+      SPRING_DATASOURCE_USERNAME: ewm
+      SPRING_DATASOURCE_PASSWORD: ewm
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQL10Dialect
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_URL: http://stats-server:9090
+    depends_on:
+      - ewm-db
 
   ewm-db:
     image: postgres:14-alpine
+    volumes:
+      - ewm-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ewm
+      POSTGRES_USER: ewm
+      POSTGRES_PASSWORD: ewm
 
 volumes:
-  postgres-data:
+  stats-db-data:
+  ewm-db-data:

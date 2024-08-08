@@ -2,6 +2,8 @@ package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.dto.statistics.EndpointHitDto;
+import ru.practicum.dto.statistics.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

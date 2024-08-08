@@ -1,0 +1,46 @@
+server:
+  port: 9090
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:none}
+      properties:
+        hibernate:
+          format_sql: true
+
+  sql:
+    init:
+      mode: always
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQL10Dialect}
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/stats}
+    username: ${SPRING_DATASOURCE_USERNAME:stats}
+    password: ${SPRING_DATASOURCE_PASSWORD:stats}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: ci, test
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:stats
+    username: test
+    password: test

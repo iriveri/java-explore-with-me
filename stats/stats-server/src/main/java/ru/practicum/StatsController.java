@@ -5,7 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.dto.statistics.EndpointHitDto;
+import ru.practicum.dto.statistics.ViewStatsDto;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -34,8 +40,8 @@ public class StatsController {
      * @return {@link ResponseEntity} содержащий "Информация сохранена" и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping("/hit")
-    public ResponseEntity<String> createRecord(@Valid @RequestBody EndpointHitDto newData) {
-        log.debug("Endpoint /hit has been reached by {}", newData.toString());
+    public ResponseEntity<String> createRecord(@RequestBody @Valid EndpointHitDto newData) {
+        log.debug("Endpoint POST /hit has been reached by {}", newData.toString());
         service.createRecord(newData);
         log.info("New statistics created about {}", newData.getApp());
         return ResponseEntity.status(HttpStatus.CREATED).body("Информация сохранена");
@@ -68,10 +74,11 @@ public class StatsController {
             throw new ValidationException("Invalid input: 'end' date is before 'start' date");
         }
 
-        log.debug("Endpoint /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
+        log.debug("Endpoint GET /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
                 start, end, uris.orElse(List.of("Empty")), unique);
 
         List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of()), unique);
+        log.info("Statistics about {} uris fetched successfully", uris.orElse(List.of("all")));
         return ResponseEntity.ok(stats);
     }
 }
