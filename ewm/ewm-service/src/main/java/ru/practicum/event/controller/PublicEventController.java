@@ -5,11 +5,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.StatisticClient;
-import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.dto.event.EventDto;
 import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.EventSort;
+import ru.practicum.dto.event.EventSortOption;
 import ru.practicum.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +64,7 @@ public class PublicEventController {
             @RequestParam(required = false) @DateTimeFormat(pattern = pattern) LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = pattern) LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-            @RequestParam(required = false) EventSort sort,
+            @RequestParam(required = false) EventSortOption sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,
             @RequestParam(defaultValue = "10") @Min(1) int size) {
         if (categories != null) {
@@ -87,14 +91,14 @@ public class PublicEventController {
      * Информация о событии должна включать в себя количество просмотров и количество подтвержденных запросов.
      * Информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики.
      *
-     * @param id id события
-     * @return {@link ResponseEntity} содержащий объект {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
+     * @param eventId id события
+     * @return {@link ResponseEntity} содержащий объект {@link EventDto} и статус ответа {@link HttpStatus#OK}
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<EventFullDto> getEvent(HttpServletRequest request, @PathVariable Long id) {
-        log.info("Endpoint GET /events/{} has been reached", id);
-        EventFullDto event = eventService.getById(id);
-        statisticClient.hitStatistic("ewm-service", "/events/" + id, request.getRemoteAddr(), LocalDateTime.now());
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDto> getEvent(HttpServletRequest request, @PathVariable Long eventId) {
+        log.info("Endpoint GET /events/{} has been reached", eventId);
+        EventDto event = eventService.getById(eventId);
+        statisticClient.hitStatistic("ewm-service", "/events/" + eventId, request.getRemoteAddr(), LocalDateTime.now());
         log.info("Event {} fetched successfully", event.getId());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }

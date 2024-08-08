@@ -3,7 +3,13 @@ package ru.practicum.category.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
@@ -26,13 +32,13 @@ public class AdminCategoryController {
      * Добавление новой категории.
      * Имя категории должно быть уникальным
      *
-     * @param newCategoryDto {@link NewCategoryDto} данные новой подборки
+     * @param newCategory {@link NewCategoryDto} данные новой подборки
      * @return {@link ResponseEntity} содержащий {@link CategoryDto} и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping
-    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-        log.debug("Endpoint POST /admin/categories has been reached with NewCategoryDto: {}", newCategoryDto);
-        CategoryDto createdCategory = categoryService.create(newCategoryDto);
+    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody NewCategoryDto newCategory) {
+        log.debug("Endpoint POST /admin/categories has been reached with NewCategoryDto: {}", newCategory);
+        CategoryDto createdCategory = categoryService.create(newCategory);
         log.info("Category {} created successfully", createdCategory.getId());
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
@@ -41,14 +47,14 @@ public class AdminCategoryController {
      * Удаление категории.
      * С категорией не должно быть связано ни одного события.
      *
-     * @param catId идентификатор категории
+     * @param categoryId идентификатор категории
      * @return {@link ResponseEntity} с статусом ответа {@link HttpStatus#NO_CONTENT}
      */
-    @DeleteMapping("/{catId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long catId) {
-        log.debug("Endpoint DELETE /admin/categories/{} has been reached", catId);
-        categoryService.delete(catId);
-        log.info("Category {} deleted successfully", catId);
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        log.debug("Endpoint DELETE /admin/categories/{} has been reached", categoryId);
+        categoryService.delete(categoryId);
+        log.info("Category {} deleted successfully", categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

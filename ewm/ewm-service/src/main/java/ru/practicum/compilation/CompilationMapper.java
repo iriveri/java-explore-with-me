@@ -13,7 +13,7 @@ import ru.practicum.event.EventMapper;
         uses = {EventMapper.class})
 public interface CompilationMapper {
     @Mapping(target = "events", ignore = true)
-    Compilation fromDto(NewCompilationDto compilation);
+    Compilation fromDto(NewCompilationDto newCompilationDto);
 
     CompilationDto toDto(Compilation compilation);
 

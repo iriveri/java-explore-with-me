@@ -1,6 +1,12 @@
 package ru.practicum.event.service;
 
-import ru.practicum.dto.event.*;
+import ru.practicum.dto.event.EventDto;
+import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.EventSortOption;
+import ru.practicum.dto.event.EventState;
+import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
+import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.event.Event;
 
 import java.time.LocalDateTime;
@@ -8,24 +14,22 @@ import java.util.List;
 
 public interface EventService {
 
-    EventFullDto create(Long userId, NewEventDto newEventDto);
+    EventDto create(Long userId, NewEventDto newEventDto);
 
-    EventFullDto update(Long eventId, UpdateEventAdminDto updateEventAdminDto);
+    EventDto update(Long eventId, AdminUpdateEventRequest adminUpdateEventRequest);
 
-
-    EventFullDto update(Long userId, Long eventId, UpdateEventUserDto updateEventUserDto);
+    EventDto update(Long userId, Long eventId, UserUpdateEventRequest userUpdateEventRequest);
 
     Event getEntityById(Long eventId);
 
-    EventFullDto getById(Long eventId);
+    EventDto getById(Long eventId);
 
-    EventFullDto getById(Long userId, Long eventId);
+    EventDto getById(Long userId, Long eventId);
 
     List<EventShortDto> getByUserId(Long userId, int from, int size);
 
-    List<EventFullDto> getAll(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
+    List<EventDto> getAll(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
 
-    List<EventShortDto> getAll(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSort sort, int from, int size);
-
+    List<EventShortDto> getAll(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortOption sort, int from, int size);
 
 }

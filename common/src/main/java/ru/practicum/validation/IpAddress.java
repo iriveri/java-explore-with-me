@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

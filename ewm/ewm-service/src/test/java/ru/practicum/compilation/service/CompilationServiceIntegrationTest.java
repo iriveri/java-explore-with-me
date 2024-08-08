@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.practicum.NotFoundException;
 import ru.practicum.compilation.Compilation;
 import ru.practicum.compilation.CompilationMapper;
-import ru.practicum.compilation.CompilationRepo;
+import ru.practicum.compilation.CompilationRepository;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationDto;
 import ru.practicum.event.service.EventService;
+import ru.practicum.exception.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Transactional // Обеспечивает откат транзакций после каждого теста
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
@@ -33,7 +33,7 @@ public class CompilationServiceIntegrationTest {
     private CompilationServiceImpl compilationService;
 
     @Autowired
-    private CompilationRepo compilationRepo;
+    private CompilationRepository compilationRepository;
 
     @Autowired
     private EventService eventService;
@@ -48,7 +48,6 @@ public class CompilationServiceIntegrationTest {
         newCompilationDto = new NewCompilationDto();
         newCompilationDto.setTitle("Test Compilation");
         newCompilationDto.setPinned(false);
-        // Установите другие поля, если они есть
     }
 
     @Test
@@ -59,8 +58,7 @@ public class CompilationServiceIntegrationTest {
         assertThat(createdCompilation.getTitle()).isEqualTo(newCompilationDto.getTitle());
         assertThat(createdCompilation.getId()).isNotNull();
 
-        // Проверяем, что компиляция сохранена в базе данных
-        List<Compilation> compilations = compilationRepo.findAll();
+        List<Compilation> compilations = compilationRepository.findAll();
         assertThat(compilations).hasSize(1);
         assertThat(compilations.get(0).getTitle()).isEqualTo(newCompilationDto.getTitle());
     }
@@ -77,8 +75,7 @@ public class CompilationServiceIntegrationTest {
 
         assertThat(updatedCompilation.getTitle()).isEqualTo(updateCompilationDto.getTitle());
 
-        // Проверяем, что обновление прошло успешно в базе данных
-        Compilation updatedEntity = compilationRepo.findById(createdCompilation.getId()).orElseThrow();
+        Compilation updatedEntity = compilationRepository.findById(createdCompilation.getId()).orElseThrow();
         assertThat(updatedEntity.getTitle()).isEqualTo(updateCompilationDto.getTitle());
         assertThat(updatedEntity.getPinned()).isTrue();
     }
@@ -88,7 +85,6 @@ public class CompilationServiceIntegrationTest {
         CompilationDto createdCompilation = compilationService.create(newCompilationDto);
         compilationService.delete(createdCompilation.getId());
 
-        // Проверяем, что компиляция была удалена из базы данных
         assertThrows(NotFoundException.class, () -> compilationService.getById(createdCompilation.getId()));
     }
 

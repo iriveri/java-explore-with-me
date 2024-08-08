@@ -10,13 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.GlobalExceptionHandler;
-import ru.practicum.NotFoundException;
-import ru.practicum.dto.requests.EventRequestStatusUpdateRequest;
-import ru.practicum.dto.requests.EventRequestStatusUpdateResult;
+import ru.practicum.dto.requests.EventRequestStatusUpdateCommand;
+import ru.practicum.dto.requests.EventRequestStatusUpdateResponse;
 import ru.practicum.dto.requests.ParticipationRequestDto;
 import ru.practicum.dto.requests.RequestStatus;
+import ru.practicum.exception.ConditionNotMetException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.request.controller.ParticipationRequestsController;
 import ru.practicum.request.service.ParticipationRequestService;
 
@@ -41,8 +41,8 @@ class RequestControllersValidationTest {
     public void setUp() {
         ParticipationRequestDto requestDto = new ParticipationRequestDto(LocalDateTime.now(), 1L, 1L, 1L, RequestStatus.PENDING);
         List<ParticipationRequestDto> requestDtoList = Collections.singletonList(requestDto);
-        EventRequestStatusUpdateRequest updateRequest = new EventRequestStatusUpdateRequest(Collections.singletonList(1L), RequestStatus.CONFIRMED);
-        EventRequestStatusUpdateResult updateResult = new EventRequestStatusUpdateResult(Collections.singletonList(requestDto), Collections.emptyList());
+        EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand(Collections.singletonList(1L), RequestStatus.CONFIRMED);
+        EventRequestStatusUpdateResponse updateResult = new EventRequestStatusUpdateResponse(Collections.singletonList(requestDto), Collections.emptyList());
 
         Mockito.when(participationRequestService.getByUserId(eq(1L)))
                 .thenReturn(requestDtoList);
@@ -74,7 +74,6 @@ class RequestControllersValidationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L));
 
-        // Test for Conflict scenarios
         Mockito.when(participationRequestService.create(eq(1L), eq(2L)))
                 .thenThrow(new ConditionNotMetException("Error: request conflict"));
 
@@ -89,7 +88,6 @@ class RequestControllersValidationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L));
 
-        // Test for Not Found scenarios
         Mockito.when(participationRequestService.delete(eq(1L), eq(2L)))
                 .thenThrow(new NotFoundException("Request not found"));
 
@@ -106,7 +104,7 @@ class RequestControllersValidationTest {
 
     @Test
     public void testChangeRequestStatus() throws Exception {
-        EventRequestStatusUpdateRequest updateRequest = new EventRequestStatusUpdateRequest(Collections.singletonList(1L), RequestStatus.CONFIRMED);
+        EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand(Collections.singletonList(1L), RequestStatus.CONFIRMED);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/1/events/1/requests")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +112,6 @@ class RequestControllersValidationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.confirmedRequests[0].id").value(1L));
 
-        // Test for Conflict scenarios
         Mockito.when(participationRequestService.updateStatus(eq(1L), eq(2L), any()))
                 .thenThrow(new ConditionNotMetException("Error: status conflict"));
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/1/events/2/requests")

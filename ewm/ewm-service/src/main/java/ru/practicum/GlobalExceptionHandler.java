@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.dto.ApiError;
+import ru.practicum.exception.ConditionNotMetException;
+import ru.practicum.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventFullDto {
+public class EventDto {
     @NotNull
     String annotation;
     @NotNull
@@ -32,7 +32,7 @@ public class EventFullDto {
     @Valid
     UserShortDto initiator;
     @NotNull
-    LocationDto location;
+    Location location;
     @NotNull
     Boolean paid;
     Integer participantLimit;

@@ -7,7 +7,7 @@ import ru.practicum.dto.requests.RequestStatus;
 import java.util.List;
 
 @Repository
-public interface ParticipationRequestRepo extends JpaRepository<ParticipationRequest, Long> {
+public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Long> {
 
     boolean existsByParticipantIdAndEventId(Long userId, Long eventId);
 

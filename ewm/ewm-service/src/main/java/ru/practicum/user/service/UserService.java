@@ -7,7 +7,7 @@ import ru.practicum.user.User;
 import java.util.List;
 
 public interface UserService {
-    UserDto create(NewUserDto newUser);
+    UserDto create(NewUserDto newUserDto);
 
     void delete(Long userId);
 

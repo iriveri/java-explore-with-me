@@ -10,13 +10,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.GlobalExceptionHandler;
-import ru.practicum.NotFoundException;
 import ru.practicum.StatisticClient;
-import ru.practicum.dto.event.*;
+import ru.practicum.dto.event.EventDto;
+import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
+import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.event.controller.AdminEventController;
 import ru.practicum.event.controller.PrivateEventController;
 import ru.practicum.event.controller.PublicEventController;
 import ru.practicum.event.service.EventService;
+import ru.practicum.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -37,16 +41,16 @@ class EventControllersValidationTest {
 
     @BeforeEach
     public void setUp() {
-        EventFullDto event = new EventFullDto();
+        EventDto event = new EventDto();
         event.setId(1L);
         EventShortDto shortEvent = new EventShortDto();
         shortEvent.setId(1L);
 
         Mockito.when(eventService.create(eq(1L), any(NewEventDto.class)))
                 .thenReturn(event);
-        Mockito.when(eventService.update(eq(1L), any(UpdateEventAdminDto.class)))
+        Mockito.when(eventService.update(eq(1L), any(AdminUpdateEventRequest.class)))
                 .thenReturn(event);
-        Mockito.when(eventService.update(eq(1L), eq(1L), any(UpdateEventUserDto.class)))
+        Mockito.when(eventService.update(eq(1L), eq(1L), any(UserUpdateEventRequest.class)))
                 .thenReturn(event);
         Mockito.when(eventService.getById(eq(1L)))
                 .thenReturn(event);
@@ -87,11 +91,9 @@ class EventControllersValidationTest {
 
     @Test
     public void testAdminGetEvents() throws Exception {
-        // Test with no parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/events"))
                 .andExpect(status().isOk());
 
-        // Test with valid parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/events")
                         .param("users", "1", "2")
                         .param("states", "PENDING", "PUBLISHED")
@@ -102,13 +104,11 @@ class EventControllersValidationTest {
                         .param("size", "10"))
                 .andExpect(status().isOk());
 
-        // Test with invalid date format
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/events")
                         .param("rangeStart", "invalid-date")
                         .param("rangeEnd", "invalid-date"))
                 .andExpect(status().isBadRequest());
 
-        // Test with invalid 'from' and 'size'
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/events")
                         .param("from", "-1")
                         .param("size", "-10"))
@@ -118,7 +118,6 @@ class EventControllersValidationTest {
 
     @Test
     public void testAdminUpdateEvent() throws Exception {
-        // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:01\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
@@ -128,7 +127,6 @@ class EventControllersValidationTest {
                         .content(validRequest))
                 .andExpect(status().isOk());
 
-        // Invalid annotation
         String invalidAnnotationRequest = "{ \"annotation\": \"Short\", \"category\": 1, \"description\": \"Valid description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
@@ -138,7 +136,6 @@ class EventControllersValidationTest {
                         .content(invalidAnnotationRequest))
                 .andExpect(status().isBadRequest());
 
-        // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"PUBLISH_EVENT\", " +
@@ -148,7 +145,6 @@ class EventControllersValidationTest {
                         .content(invalidTitleRequest))
                 .andExpect(status().isBadRequest());
 
-        // Invalid stateAction
         String invalidStateActionRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"stateAction\": \"INVALID_ACTION\", " +
@@ -161,17 +157,14 @@ class EventControllersValidationTest {
 
     @Test
     public void testPrivateGetUserEvents() throws Exception {
-        // Test with no parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events"))
                 .andExpect(status().isOk());
 
-        // Test with valid parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events")
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk());
 
-        // Test with invalid 'from' and 'size'
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events")
                         .param("from", "-1")
                         .param("size", "-10"))
@@ -181,7 +174,6 @@ class EventControllersValidationTest {
 
     @Test
     public void testAddEvent() throws Exception {
-        // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Valid title\" }";
@@ -190,8 +182,6 @@ class EventControllersValidationTest {
                         .content(validRequest))
                 .andExpect(status().isCreated());
 
-
-        // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Ti\" }";
@@ -203,11 +193,9 @@ class EventControllersValidationTest {
 
     @Test
     public void testPrivateGetEvent() throws Exception {
-        // Valid request
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events/1"))
                 .andExpect(status().isOk());
 
-        // Event not found
         Mockito.when(eventService.getById(eq(1L), eq(2L)))
                 .thenThrow(new NotFoundException("Event not found"));
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1/events/2"))
@@ -216,7 +204,6 @@ class EventControllersValidationTest {
 
     @Test
     public void testUpdateEvent() throws Exception {
-        // Valid request
         String validRequest = "{ \"annotation\": \"Valid long annotation\", \"category\": 1, \"description\": \"Valid long description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Valid title\" }";
@@ -225,7 +212,6 @@ class EventControllersValidationTest {
                         .content(validRequest))
                 .andExpect(status().isOk());
 
-        // Invalid title
         String invalidTitleRequest = "{ \"annotation\": \"Valid annotation\", \"category\": 1, \"description\": \"Valid description\", " +
                 "\"eventDate\": \"2025-01-01 00:00:00\", \"location\": {\"lat\": 55.7558, \"lon\": 37.6176}, " +
                 "\"paid\": true, \"participantLimit\": 100, \"requestModeration\": true, \"title\": \"Ti\" }";
@@ -237,11 +223,9 @@ class EventControllersValidationTest {
 
     @Test
     public void testPublicGetEvents() throws Exception {
-        // Test with no parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/events"))
                 .andExpect(status().isOk());
 
-        // Test with valid parameters
         mockMvc.perform(MockMvcRequestBuilders.get("/events")
                         .param("text", "sample")
                         .param("categories", "1", "2")
@@ -254,7 +238,6 @@ class EventControllersValidationTest {
                         .param("size", "10"))
                 .andExpect(status().isOk());
 
-        // Test with invalid 'from' and 'size'
         mockMvc.perform(MockMvcRequestBuilders.get("/events")
                         .param("from", "-1")
                         .param("size", "-10"))
@@ -264,11 +247,9 @@ class EventControllersValidationTest {
 
     @Test
     public void testPublicGetEvent() throws Exception {
-        // Valid request
         mockMvc.perform(MockMvcRequestBuilders.get("/events/1"))
                 .andExpect(status().isOk());
 
-        // Event not found
         Mockito.when(eventService.getById(eq(2L)))
                 .thenThrow(new NotFoundException("Event not found"));
         mockMvc.perform(MockMvcRequestBuilders.get("/events/2"))

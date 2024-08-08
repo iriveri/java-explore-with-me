@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 
@@ -47,14 +51,14 @@ public class PublicCategoryController {
      * Получение категории событий по его id.
      * В случае, если категории с заданным id не найдено, возвращает статус код 404.
      *
-     * @param catId id подборки
+     * @param categoryId id подборки
      * @return {@link ResponseEntity} содержащий {@link CategoryDto} и статус ответа {@link HttpStatus#OK}
      */
-    @GetMapping("/{catId}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable Long catId) {
-        log.debug("Endpoint GET /categories/{} has been reached", catId);
-        CategoryDto category = categoryService.getById(catId);
-        log.info("Category {} fetched successfully", catId);
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable Long categoryId) {
+        log.debug("Endpoint GET /categories/{} has been reached", categoryId);
+        CategoryDto category = categoryService.getById(categoryId);
+        log.info("Category {} fetched successfully", categoryId);
         return ResponseEntity.ok(category);
     }
 }

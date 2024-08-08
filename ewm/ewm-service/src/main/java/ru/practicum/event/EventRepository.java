@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EventRepo extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
+public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
 
     List<Event> findByInitiatorId(Long userId, Pageable pageable);
 
-    boolean existsByCategoryId(Long catId);
+    boolean existsByCategoryId(Long categoryId);
 }

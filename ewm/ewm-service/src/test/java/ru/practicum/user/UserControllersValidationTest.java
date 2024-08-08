@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.practicum.GlobalExceptionHandler;
-import ru.practicum.NotFoundException;
 import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.user.controller.AdminUserController;
 import ru.practicum.user.service.UserService;
 
@@ -54,7 +54,6 @@ class UserControllersValidationTest {
 
     @Test
     public void testGetUsers() throws Exception {
-        // Test fetching all users
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/users")
                         .param("from", "0")
                         .param("size", "10"))
@@ -63,7 +62,6 @@ class UserControllersValidationTest {
                 .andExpect(jsonPath("$[0].name").value("user1"))
                 .andExpect(jsonPath("$[0].email").value("user1@example.com"));
 
-        // Test fetching specific users by IDs
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/users")
                         .param("ids", "1")
                         .param("from", "0")
@@ -73,7 +71,6 @@ class UserControllersValidationTest {
                 .andExpect(jsonPath("$[0].name").value("user1"))
                 .andExpect(jsonPath("$[0].email").value("user1@example.com"));
 
-        // Test empty result when no users found
         Mockito.when(userService.getAll(Collections.singletonList(2L), 0, 11))
                 .thenReturn(Collections.emptyList());
 
@@ -98,7 +95,6 @@ class UserControllersValidationTest {
                 .andExpect(jsonPath("$.name").value("user1"))
                 .andExpect(jsonPath("$.email").value("user1@example.com"));
 
-        // Test validation error
         NewUserDto invalidUserDto = new NewUserDto("invalid-email", "");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/users")
@@ -112,7 +108,6 @@ class UserControllersValidationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/admin/users/1"))
                 .andExpect(status().isNoContent());
 
-        // Test delete non-existing user
         Mockito.doThrow(new NotFoundException("User not found")).when(userService).delete(2L);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/admin/users/2"))

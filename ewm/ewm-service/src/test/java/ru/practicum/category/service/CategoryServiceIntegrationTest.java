@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.practicum.NotFoundException;
 import ru.practicum.category.Category;
 import ru.practicum.category.CategoryMapper;
-import ru.practicum.category.CategoryRepo;
+import ru.practicum.category.CategoryRepository;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
-import ru.practicum.event.EventRepo;
+import ru.practicum.event.EventRepository;
+import ru.practicum.exception.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -33,13 +33,13 @@ public class CategoryServiceIntegrationTest {
     private CategoryServiceImpl categoryService;
 
     @Autowired
-    private CategoryRepo categoryRepo;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private EventRepo eventRepo;
+    private EventRepository eventRepository;
 
     @Autowired
-    private CategoryMapper mapper;
+    private CategoryMapper categoryMapper;
 
     private NewCategoryDto newCategoryDto;
 
@@ -47,47 +47,43 @@ public class CategoryServiceIntegrationTest {
     public void setUp() {
         newCategoryDto = new NewCategoryDto();
         newCategoryDto.setName("Test Category");
-        // Установите другие поля, если они есть
     }
 
     @Test
     public void testCreateCategory() {
-        CategoryDto createdCategory = categoryService.create(newCategoryDto);
+        CategoryDto categoryDto = categoryService.create(newCategoryDto);
 
-        assertThat(createdCategory).isNotNull();
-        assertThat(createdCategory.getName()).isEqualTo(newCategoryDto.getName());
-        assertThat(createdCategory.getId()).isNotNull();
+        assertThat(categoryDto).isNotNull();
+        assertThat(categoryDto.getName()).isEqualTo(newCategoryDto.getName());
+        assertThat(categoryDto.getId()).isNotNull();
 
-        // Проверяем, что категория сохранена в базе данных
-        List<Category> categories = categoryRepo.findAll();
+        List<Category> categories = categoryRepository.findAll();
         assertThat(categories).hasSize(1);
         assertThat(categories.get(0).getName()).isEqualTo(newCategoryDto.getName());
     }
 
     @Test
     public void testUpdateCategory() {
-        CategoryDto createdCategory = categoryService.create(newCategoryDto);
+        CategoryDto categoryDto = categoryService.create(newCategoryDto);
 
         UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto();
         updateCategoryDto.setName("Updated Category");
 
-        CategoryDto updatedCategory = categoryService.update(createdCategory.getId(), updateCategoryDto);
+        CategoryDto updatedCategory = categoryService.update(categoryDto.getId(), updateCategoryDto);
 
         assertThat(updatedCategory.getName()).isEqualTo(updateCategoryDto.getName());
 
-        // Проверяем, что обновление прошло успешно в базе данных
-        Category updatedEntity = categoryRepo.findById(createdCategory.getId()).orElseThrow();
+        Category updatedEntity = categoryRepository.findById(categoryDto.getId()).orElseThrow();
         assertThat(updatedEntity.getName()).isEqualTo(updateCategoryDto.getName());
     }
 
     @Test
     public void testDeleteCategory() {
-        CategoryDto createdCategory = categoryService.create(newCategoryDto);
+        CategoryDto categoryDto = categoryService.create(newCategoryDto);
 
-        categoryService.delete(createdCategory.getId());
+        categoryService.delete(categoryDto.getId());
 
-        // Проверяем, что категория была удалена из базы данных
-        assertThrows(NotFoundException.class, () -> categoryService.getById(createdCategory.getId()));
+        assertThrows(NotFoundException.class, () -> categoryService.getById(categoryDto.getId()));
     }
 
     @Test

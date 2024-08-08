@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.NewCategoryDto;
-import ru.practicum.dto.event.AdminStateAction;
 import ru.practicum.dto.event.NewEventDto;
-import ru.practicum.dto.event.UpdateEventAdminDto;
-import ru.practicum.dto.requests.EventRequestStatusUpdateRequest;
-import ru.practicum.dto.requests.EventRequestStatusUpdateResult;
+import ru.practicum.dto.event.admin.AdminAction;
+import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
+import ru.practicum.dto.requests.EventRequestStatusUpdateCommand;
+import ru.practicum.dto.requests.EventRequestStatusUpdateResponse;
 import ru.practicum.dto.requests.ParticipationRequestDto;
 import ru.practicum.dto.requests.RequestStatus;
 import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.event.service.EventService;
+import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.request.ParticipationRequestMapper;
-import ru.practicum.request.ParticipationRequestRepo;
+import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.service.UserService;
 
 import javax.transaction.Transactional;
@@ -50,7 +50,7 @@ public class ParticipationRequestServiceIntegrationTest {
     private UserService userService;
 
     @Autowired
-    private ParticipationRequestRepo participationRequestRepo;
+    private ParticipationRequestRepository participationRequestRepository;
 
     @Autowired
     private ParticipationRequestMapper participationRequestMapper;
@@ -61,23 +61,20 @@ public class ParticipationRequestServiceIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        // Инициализация пользователя и события для тестов
         userId = userService.create(new NewUserDto("just.bob@bobs.ru", "MR.BOBS")).getId();
         Long categoryId = categoryService.create(new NewCategoryDto("Pizza")).getId();
 
         partisipantId = userService.create(new NewUserDto("just.mob@bobs.ru", "MR.MOMS")).getId();
-        // Создание тестового события с необходимыми параметрами
+
         NewEventDto newEventDto = new NewEventDto();
         newEventDto.setTitle("Test Event");
         newEventDto.setCategory(categoryId);
         newEventDto.setParticipantLimit(1);
         newEventDto.setEventDate(LocalDateTime.now().plusHours(3)); // Устанавливаем дату события через 3 часа
-        // Установите другие поля, если они есть
 
-        // Создаем тестовые события
         eventId = eventService.create(userId, newEventDto).getId();
-        var updatedto = new UpdateEventAdminDto();
-        updatedto.setStateAction(AdminStateAction.PUBLISH_EVENT);
+        var updatedto = new AdminUpdateEventRequest();
+        updatedto.setStateAction(AdminAction.PUBLISH_EVENT);
         eventService.update(eventId, updatedto);
     }
 
@@ -95,7 +92,6 @@ public class ParticipationRequestServiceIntegrationTest {
     public void testCreateParticipationRequest_UserAlreadyParticipating() {
         participationRequestService.create(partisipantId, eventId); // Первый запрос
 
-        // Проверяем, что повторный запрос вызывает исключение
         ConditionNotMetException exception = assertThrows(
                 ConditionNotMetException.class,
                 () -> participationRequestService.create(partisipantId, eventId)
@@ -108,11 +104,11 @@ public class ParticipationRequestServiceIntegrationTest {
     public void testUpdateStatus() {
         ParticipationRequestDto requestDto = participationRequestService.create(partisipantId, eventId);
 
-        EventRequestStatusUpdateRequest updateRequest = new EventRequestStatusUpdateRequest();
+        EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand();
         updateRequest.setRequestIds(Arrays.asList(requestDto.getId()));
         updateRequest.setStatus(RequestStatus.CONFIRMED);
 
-        EventRequestStatusUpdateResult result = participationRequestService.updateStatus(userId, eventId, updateRequest);
+        EventRequestStatusUpdateResponse result = participationRequestService.updateStatus(userId, eventId, updateRequest);
 
         assertThat(result.getConfirmedRequests()).hasSize(1);
         assertThat(result.getConfirmedRequests().get(0).getStatus()).isEqualTo(RequestStatus.CONFIRMED);
@@ -124,11 +120,10 @@ public class ParticipationRequestServiceIntegrationTest {
 
         ParticipationRequestDto requestDto = participationRequestService.create(anotherUserId, eventId);
 
-        EventRequestStatusUpdateRequest updateRequest = new EventRequestStatusUpdateRequest();
+        EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand();
         updateRequest.setRequestIds(Arrays.asList(requestDto.getId()));
         updateRequest.setStatus(RequestStatus.CONFIRMED);
 
-        // Проверяем, что инициатор события не может обновить статус запроса другого пользователя
         ConditionNotMetException exception = assertThrows(
                 ConditionNotMetException.class,
                 () -> participationRequestService.updateStatus(partisipantId, eventId, updateRequest)

@@ -8,15 +8,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.StatisticClient;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.NewCategoryDto;
-import ru.practicum.dto.event.*;
+import ru.practicum.dto.event.EventDto;
+import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.EventSortOption;
+import ru.practicum.dto.event.EventState;
+import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.admin.AdminAction;
+import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
+import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.event.Event;
 import ru.practicum.event.EventMapper;
-import ru.practicum.event.EventRepo;
+import ru.practicum.event.EventRepository;
+import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -30,7 +37,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 
 @SpringBootTest
-@Transactional // Откат транзакций после каждого теста
+@Transactional
 @AutoConfigureMockMvc
 public class EventServiceImplIntegrationTest {
 
@@ -38,7 +45,7 @@ public class EventServiceImplIntegrationTest {
     private EventServiceImpl eventService;
 
     @Autowired
-    private EventRepo eventRepo;
+    private EventRepository eventRepository;
 
     @Autowired
     private UserService userService;
@@ -58,8 +65,6 @@ public class EventServiceImplIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-// Инициализация пользователя и категории для тестов
-
         userId = userService.create(new NewUserDto("just.bob@bobs.ru", "MR.BOBS")).getId();
         categoryId = categoryService.create(new NewCategoryDto("Pizza")).getId();
 
@@ -67,58 +72,53 @@ public class EventServiceImplIntegrationTest {
         newEventDto.setTitle("Test Event");
         newEventDto.setCategory(categoryId);
         newEventDto.setEventDate(LocalDateTime.now().plusHours(3)); // Устанавливаем дату события через 3 часа
-        // Установите другие поля, если они есть
 
-        // Создаем тестовые события
         eventService.create(userId, newEventDto);
         newEventDto.setTitle("Test Event 2");
         eventService.create(userId, newEventDto);
 
         Mockito.when(statisticClient.getStatistics(any(LocalDateTime.class), any(LocalDateTime.class),
                 anyList(), anyBoolean())).thenReturn(Collections.emptyList());
-        ;
     }
 
     @Test
     public void testCreateEvent() {
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
+        EventDto createdEvent = eventService.create(userId, newEventDto);
 
         assertThat(createdEvent).isNotNull();
         assertThat(createdEvent.getTitle()).isEqualTo(newEventDto.getTitle());
         assertThat(createdEvent.getInitiator().getId()).isEqualTo(userId);
 
-        // Проверяем, что событие сохранено в базе данных
-        Optional<Event> foundEvent = eventRepo.findById(createdEvent.getId());
+        Optional<Event> foundEvent = eventRepository.findById(createdEvent.getId());
         assertThat(foundEvent).isPresent();
         assertThat(foundEvent.get().getTitle()).isEqualTo(newEventDto.getTitle());
     }
 
     @Test
     public void testUpdateEvent() {
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
+        EventDto createdEvent = eventService.create(userId, newEventDto);
 
-        UpdateEventAdminDto updateEventDto = new UpdateEventAdminDto();
-        updateEventDto.setStateAction(AdminStateAction.PUBLISH_EVENT);
+        AdminUpdateEventRequest updateEventDto = new AdminUpdateEventRequest();
+        updateEventDto.setStateAction(AdminAction.PUBLISH_EVENT);
         updateEventDto.setEventDate(LocalDateTime.now().plusHours(4)); // Обновляем дату события
 
-        EventFullDto updatedEvent = eventService.update(createdEvent.getId(), updateEventDto);
+        EventDto updatedEvent = eventService.update(createdEvent.getId(), updateEventDto);
 
         assertThat(updatedEvent.getState()).isEqualTo(EventState.PUBLISHED);
 
-        // Проверяем, что обновление прошло успешно в базе данных
-        Event updatedEntity = eventRepo.findById(createdEvent.getId()).orElseThrow();
+        Event updatedEntity = eventRepository.findById(createdEvent.getId()).orElseThrow();
         assertThat(updatedEntity.getState()).isEqualTo(EventState.PUBLISHED);
     }
 
     @Test
     public void testUpdateUserEvent() {
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
+        EventDto createdEvent = eventService.create(userId, newEventDto);
 
-        UpdateEventUserDto updateUserDto = new UpdateEventUserDto();
+        UserUpdateEventRequest updateUserDto = new UserUpdateEventRequest();
         var expectedDate = LocalDateTime.now().plusHours(5);
         updateUserDto.setEventDate(expectedDate); // Обновляем дату события
 
-        EventFullDto updatedUserEvent = eventService.update(userId, createdEvent.getId(), updateUserDto);
+        EventDto updatedUserEvent = eventService.update(userId, createdEvent.getId(), updateUserDto);
 
         assertThat(updatedUserEvent.getEventDate()).isEqualTo(updateUserDto.getEventDate());
 
@@ -126,18 +126,18 @@ public class EventServiceImplIntegrationTest {
 
         assertThrows(ConditionNotMetException.class, () -> eventService.update(userId, createdEvent.getId(), updateUserDto));
 
-        Event updatedEntity = eventRepo.findById(createdEvent.getId()).orElseThrow();
+        Event updatedEntity = eventRepository.findById(createdEvent.getId()).orElseThrow();
         assertThat(updatedEntity.getEventDate()).isEqualTo(expectedDate);
     }
 
 
     @Test
     public void testGetById() {
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
-        UpdateEventAdminDto dto = new UpdateEventAdminDto();
-        dto.setStateAction(AdminStateAction.PUBLISH_EVENT);
+        EventDto createdEvent = eventService.create(userId, newEventDto);
+        AdminUpdateEventRequest dto = new AdminUpdateEventRequest();
+        dto.setStateAction(AdminAction.PUBLISH_EVENT);
         eventService.update(createdEvent.getId(), dto);
-        EventFullDto foundEvent = eventService.getById(createdEvent.getId());
+        EventDto foundEvent = eventService.getById(createdEvent.getId());
 
         assertThat(foundEvent).isNotNull();
         assertThat(foundEvent.getId()).isEqualTo(createdEvent.getId());
@@ -146,9 +146,9 @@ public class EventServiceImplIntegrationTest {
 
     @Test
     public void testGetByIdAsUser() {
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
+        EventDto createdEvent = eventService.create(userId, newEventDto);
 
-        EventFullDto foundEvent = eventService.getById(userId, createdEvent.getId());
+        EventDto foundEvent = eventService.getById(userId, createdEvent.getId());
 
         assertThat(foundEvent).isNotNull();
         assertThat(foundEvent.getInitiator().getId()).isEqualTo(userId);
@@ -156,7 +156,7 @@ public class EventServiceImplIntegrationTest {
 
     @Test
     public void testGetAllWithFilters() {
-        List<EventFullDto> events = eventService.getAll(
+        List<EventDto> events = eventService.getAll(
                 Collections.singletonList(userId),
                 List.of(EventState.PENDING),
                 Collections.singletonList(categoryId),
@@ -179,7 +179,7 @@ public class EventServiceImplIntegrationTest {
                 LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(1),
                 null,
-                EventSort.EVENT_DATE,
+                EventSortOption.EVENT_DATE,
                 0,
                 10
         );

@@ -1,8 +1,18 @@
 package ru.practicum.event;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import ru.practicum.category.CategoryMapper;
-import ru.practicum.dto.event.*;
+import ru.practicum.dto.event.EventDto;
+import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.dto.event.EventState;
+import ru.practicum.dto.event.EventUpdateRequest;
+import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
+import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.user.UserMapper;
 
 import java.time.LocalDateTime;
@@ -15,44 +25,19 @@ public interface EventMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(source = "location.lat", target = "lat")
     @Mapping(source = "location.lon", target = "lon")
-    Event fromDto(NewEventDto event);
+    Event fromDto(NewEventDto newEventDto);
 
     @Mapping(source = "lat", target = "location.lat")
     @Mapping(source = "lon", target = "location.lon")
-    EventFullDto toDto(Event event);
+    EventDto toDto(Event event);
 
     EventShortDto toShortDto(Event event);
 
-    default void updateEventFromAdminDto(UpdateEventAdminDto updateEvent, @MappingTarget Event event) {
-        if (updateEvent.getAnnotation() != null)
-            event.setAnnotation(updateEvent.getAnnotation());
+    default void updateEventFromAdminRequest(AdminUpdateEventRequest updateRequest, @MappingTarget Event event) {
+        updateEventBasicFields(event, updateRequest);
 
-        if (updateEvent.getDescription() != null)
-            event.setDescription(updateEvent.getDescription());
-
-        if (updateEvent.getEventDate() != null)
-            event.setEventDate(updateEvent.getEventDate());
-
-        if (updateEvent.getLocation() != null) {
-            var locationDto = updateEvent.getLocation();
-            event.setLat(locationDto.getLat());
-            event.setLon(locationDto.getLon());
-        }
-
-        if (updateEvent.getPaid() != null)
-            event.setPaid(updateEvent.getPaid());
-
-        if (updateEvent.getParticipantLimit() != null)
-            event.setParticipantLimit(updateEvent.getParticipantLimit());
-
-        if (updateEvent.getRequestModeration() != null)
-            event.setRequestModeration(updateEvent.getRequestModeration());
-
-        if (updateEvent.getTitle() != null)
-            event.setTitle(updateEvent.getTitle());
-
-        if (updateEvent.getStateAction() != null) {
-            switch (updateEvent.getStateAction()) {
+        if (updateRequest.getStateAction() != null) {
+            switch (updateRequest.getStateAction()) {
                 case REJECT_EVENT:
                     event.setState(EventState.CANCELED);
                     break;
@@ -62,41 +47,13 @@ public interface EventMapper {
                     break;
             }
         }
-
-
     }
 
-    default void updateEventFromUserDto(UpdateEventUserDto updateEvent, @MappingTarget Event event) {
-        if (updateEvent.getAnnotation() != null)
-            event.setAnnotation(updateEvent.getAnnotation());
+    default void updateEventFromUserRequest(UserUpdateEventRequest updateRequest, @MappingTarget Event event) {
+        updateEventBasicFields(event, updateRequest);
 
-        if (updateEvent.getDescription() != null)
-            event.setDescription(updateEvent.getDescription());
-
-        if (updateEvent.getEventDate() != null)
-            event.setEventDate(updateEvent.getEventDate());
-
-        if (updateEvent.getLocation() != null) {
-            var locationDto = updateEvent.getLocation();
-            event.setLat(locationDto.getLat());
-            event.setLon(locationDto.getLon());
-        }
-
-        if (updateEvent.getPaid() != null)
-            event.setPaid(updateEvent.getPaid());
-
-        if (updateEvent.getParticipantLimit() != null)
-            event.setParticipantLimit(updateEvent.getParticipantLimit());
-
-        if (updateEvent.getRequestModeration() != null)
-            event.setRequestModeration(updateEvent.getRequestModeration());
-
-        if (updateEvent.getTitle() != null)
-            event.setTitle(updateEvent.getTitle());
-
-
-        if (updateEvent.getStateAction() != null) {
-            switch (updateEvent.getStateAction()) {
+        if (updateRequest.getStateAction() != null) {
+            switch (updateRequest.getStateAction()) {
                 case CANCEL_REVIEW:
                     event.setState(EventState.CANCELED);
                     break;
@@ -105,7 +62,41 @@ public interface EventMapper {
                     break;
             }
         }
+    }
 
+    private <T extends EventUpdateRequest> void updateEventBasicFields(@MappingTarget Event event, T updateRequest) {
+        if (updateRequest.getAnnotation() != null) {
+            event.setAnnotation(updateRequest.getAnnotation());
+        }
+
+        if (updateRequest.getDescription() != null) {
+            event.setDescription(updateRequest.getDescription());
+        }
+
+        if (updateRequest.getEventDate() != null) {
+            event.setEventDate(updateRequest.getEventDate());
+        }
+
+        if (updateRequest.getLocation() != null) {
+            event.setLat(updateRequest.getLocation().getLat());
+            event.setLon(updateRequest.getLocation().getLon());
+        }
+
+        if (updateRequest.getPaid() != null) {
+            event.setPaid(updateRequest.getPaid());
+        }
+
+        if (updateRequest.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateRequest.getParticipantLimit());
+        }
+
+        if (updateRequest.getRequestModeration() != null) {
+            event.setRequestModeration(updateRequest.getRequestModeration());
+        }
+
+        if (updateRequest.getTitle() != null) {
+            event.setTitle(updateRequest.getTitle());
+        }
     }
 }
 

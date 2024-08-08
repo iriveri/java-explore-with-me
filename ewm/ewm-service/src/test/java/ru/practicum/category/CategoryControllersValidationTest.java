@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.GlobalExceptionHandler;
 import ru.practicum.category.controller.AdminCategoryController;
 import ru.practicum.category.controller.PublicCategoryController;
@@ -17,6 +16,7 @@ import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
+import ru.practicum.exception.ConditionNotMetException;
 
 import java.util.Collections;
 
@@ -62,7 +62,6 @@ class CategoryControllersValidationTest {
                         .param("size", "-10"))
                 .andExpect(status().isBadRequest());
 
-        // Additional edge cases
         mockMvc.perform(MockMvcRequestBuilders.get("/categories")
                         .param("from", "0")
                         .param("size", "100"))
@@ -88,14 +87,12 @@ class CategoryControllersValidationTest {
                         .content(validCategory))
                 .andExpect(status().isCreated());
 
-        // Additional invalid JSON
         String invalidJson = "{ name: \"name\" }";
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
                 .andExpect(status().isBadRequest());
 
-        // Unique name test
         Mockito.when(categoryService.create(any(NewCategoryDto.class)))
                 .thenThrow(new ConditionNotMetException("Category name must be unique"));
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/categories")
@@ -124,7 +121,6 @@ class CategoryControllersValidationTest {
                         .content(validCategory))
                 .andExpect(status().isOk());
 
-        // Additional invalid JSON
         String invalidJson = "{ name: \"name\" }";
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)

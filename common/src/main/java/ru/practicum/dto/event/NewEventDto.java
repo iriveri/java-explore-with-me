@@ -27,7 +27,7 @@ public class NewEventDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
     @NotNull
-    LocationDto location;
+    Location location;
     Boolean paid = false;
     @PositiveOrZero
     Integer participantLimit = 0;

@@ -4,11 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.event.EventFullDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.dto.event.EventDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.NewEventDto;
-import ru.practicum.dto.event.UpdateEventUserDto;
+import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.event.service.EventService;
 
 import javax.validation.Valid;
@@ -53,23 +60,23 @@ public class PrivateEventController {
      * Добавление нового события.
      * Дата и время, на которые намечено событие, не могут быть раньше, чем через два часа от текущего момента.
      *
-     * @param userId      id текущего пользователя
-     * @param newEventDto {@link NewEventDto} данные добавляемого события
-     * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#CREATED}
+     * @param userId   id текущего пользователя
+     * @param newEvent {@link NewEventDto} данные добавляемого события
+     * @return {@link ResponseEntity} содержащий событие {@link EventDto} и статус ответа {@link HttpStatus#CREATED}
      */
     @PostMapping
-    public ResponseEntity<EventFullDto> addEvent(
+    public ResponseEntity<EventDto> addEvent(
             @PathVariable Long userId,
-            @Valid @RequestBody NewEventDto newEventDto) {
+            @Valid @RequestBody NewEventDto newEvent) {
 
-        log.debug("Endpoint POST /users/{}/events has been reached with NewEventDto: {}", userId, newEventDto);
+        log.debug("Endpoint POST /users/{}/events has been reached with NewEventDto: {}", userId, newEvent);
 
-        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+        if (newEvent.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new RuntimeException("Field: eventDate. Error: должно содержать дату," +
-                    " которая еще не наступила. Value: " + newEventDto.getEventDate().toString());
+                    " которая еще не наступила. Value: " + newEvent.getEventDate().toString());
         }
 
-        EventFullDto createdEvent = eventService.create(userId, newEventDto);
+        EventDto createdEvent = eventService.create(userId, newEvent);
         log.info("User's {} event {} created successfully", userId, createdEvent.getId());
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
@@ -80,15 +87,15 @@ public class PrivateEventController {
      *
      * @param userId  id текущего пользователя
      * @param eventId id события
-     * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
+     * @return {@link ResponseEntity} содержащий событие {@link EventDto} и статус ответа {@link HttpStatus#OK}
      */
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> getEvent(
+    public ResponseEntity<EventDto> getEvent(
             @PathVariable Long userId,
             @PathVariable Long eventId) {
 
         log.debug("Endpoint GET /users/{}/events/{} has been reached", userId, eventId);
-        EventFullDto event = eventService.getById(userId, eventId);
+        EventDto event = eventService.getById(userId, eventId);
         log.info("User's {} event {} fetched successfully", userId, event.getId());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
@@ -98,19 +105,19 @@ public class PrivateEventController {
      * Изменить можно только отмененные события или события в состоянии ожидания модерации (Ожидается код ошибки 409).
      * Дата и время, на которые намечено событие, не могут быть раньше, чем через два часа от текущего момента (Ожидается код ошибки 409).
      *
-     * @param userId             id текущего пользователя
-     * @param eventId            id события
-     * @param updateEventUserDto {@link UpdateEventUserDto} данные для обновления события
-     * @return {@link ResponseEntity} содержащий событие {@link EventFullDto} и статус ответа {@link HttpStatus#OK}
+     * @param userId                 id текущего пользователя
+     * @param eventId                id события
+     * @param userUpdateEventRequest {@link UserUpdateEventRequest} данные для обновления события
+     * @return {@link ResponseEntity} содержащий событие {@link EventDto} и статус ответа {@link HttpStatus#OK}
      */
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEvent(
+    public ResponseEntity<EventDto> updateEvent(
             @PathVariable Long userId,
             @PathVariable Long eventId,
-            @Valid @RequestBody UpdateEventUserDto updateEventUserDto) {
+            @Valid @RequestBody UserUpdateEventRequest userUpdateEventRequest) {
 
-        log.debug("Endpoint PATCH /users/{}/events/{} has been reached with UpdateEventUserRequest: {}", userId, eventId, updateEventUserDto);
-        EventFullDto updatedEvent = eventService.update(userId, eventId, updateEventUserDto);
+        log.debug("Endpoint PATCH /users/{}/events/{} has been reached with UpdateEventUserRequest: {}", userId, eventId, userUpdateEventRequest);
+        EventDto updatedEvent = eventService.update(userId, eventId, userUpdateEventRequest);
         log.info("User's {} event {} updated successfully", userId, updatedEvent.getId());
         return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
     }

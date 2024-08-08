@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.NotFoundException;
 import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.user.User;
 import ru.practicum.user.UserMapper;
-import ru.practicum.user.UserRepo;
+import ru.practicum.user.UserRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class UserServiceIntegrationTest {
     private UserServiceImpl userService;
 
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -42,7 +42,7 @@ public class UserServiceIntegrationTest {
         User user = new User();
         user.setName("Test User");
         user.setEmail("test@example.com");
-        userId = userRepo.save(user).getId();
+        userId = userRepository.save(user).getId();
     }
 
     @Test
@@ -109,7 +109,6 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testGetAllUsers_WithPagination() {
-        // Добавляем еще одного пользователя для теста пагинации
         NewUserDto newUserDto = new NewUserDto();
         newUserDto.setName("Another User");
         newUserDto.setEmail("anotheruser@example.com");

@@ -13,22 +13,31 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventUserDto {
-
+public abstract class EventUpdateRequest {
     @Size(min = 20, max = 2000)
     String annotation;
+
     Long category;
+
     @Size(min = 20, max = 7000)
     String description;
+
     @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
-    LocationDto location;
+
+    Location location;
+
     Boolean paid;
+
     @PositiveOrZero
     Integer participantLimit;
+
     Boolean requestModeration;
-    UserStateAction stateAction;
+
     @Size(min = 3, max = 120)
     String title;
+
+    // Абстрактный метод для действия, которое может варьироваться между админом и пользователем
+    public abstract Enum<?> getStateAction();
 }

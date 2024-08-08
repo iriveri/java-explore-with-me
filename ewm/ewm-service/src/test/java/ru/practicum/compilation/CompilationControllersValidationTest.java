@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.practicum.ConditionNotMetException;
 import ru.practicum.GlobalExceptionHandler;
 import ru.practicum.compilation.controller.AdminCompilationController;
 import ru.practicum.compilation.controller.PublicCompilationController;
@@ -17,6 +16,7 @@ import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationDto;
+import ru.practicum.exception.ConditionNotMetException;
 
 import java.util.Collections;
 import java.util.Optional;

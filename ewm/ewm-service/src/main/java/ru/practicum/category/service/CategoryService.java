@@ -12,11 +12,11 @@ public interface CategoryService {
 
     CategoryDto update(Long catId, UpdateCategoryDto categoryDto);
 
-    void delete(Long catId);
+    void delete(Long categoryId);
 
-    Category getEntityById(Long catId);
+    Category getEntityById(Long categoryId);
 
-    CategoryDto getById(Long catId);
+    CategoryDto getById(Long categoryId);
 
     List<CategoryDto> getAll(int offset, int limit);
 }
