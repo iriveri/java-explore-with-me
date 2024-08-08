@@ -67,12 +67,6 @@ public class PublicEventController {
             @RequestParam(required = false) EventSortOption sort,
             @RequestParam(defaultValue = "0") @Min(0) int from,
             @RequestParam(defaultValue = "10") @Min(1) int size) {
-        if (categories != null) {
-            for (var category : categories) {
-                if (category <= 0)
-                    throw new RuntimeException("Id cant be less than 0");
-            }
-        }
 
         log.debug("Endpoint GET /events has been reached with " +
                         "text: {}, categories: {}, paid: {}, rangeStart: {}," +
