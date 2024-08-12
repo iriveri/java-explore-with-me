@@ -24,6 +24,7 @@ import ru.practicum.event.EventSpecifications;
 import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.request.ParticipationRequestRepository;
+import ru.practicum.user.User;
 import ru.practicum.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -55,8 +56,9 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventDto create(Long userId, NewEventDto newEventDto) {
         Event event = eventMapper.fromDto(newEventDto);
-        event.setInitiator(userService.getEntityById(userId));
-        event.setCategory(categoryService.getEntityById(newEventDto.getCategory()));
+        var us = new User();
+        us.setId(userId);
+        event.setInitiator(us);
 
         event.setConfirmedRequests(0L);
         event.setCreatedOn(LocalDateTime.now());

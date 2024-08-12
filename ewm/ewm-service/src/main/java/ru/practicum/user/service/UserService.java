@@ -15,5 +15,4 @@ public interface UserService {
 
     List<UserDto> getAll(List<Long> ids, int offset, int limit);
 
-
 }

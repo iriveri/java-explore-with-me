@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
         uses = {CategoryMapper.class, UserMapper.class})
 public interface EventMapper {
 
-    @Mapping(target = "category", ignore = true)
+    @Mapping(source = "category", target = "category.id")
     @Mapping(source = "location.lat", target = "lat")
     @Mapping(source = "location.lon", target = "lon")
     Event fromDto(NewEventDto newEventDto);
