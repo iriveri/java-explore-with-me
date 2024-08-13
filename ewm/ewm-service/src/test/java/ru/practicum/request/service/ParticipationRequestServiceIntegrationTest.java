@@ -1,5 +1,6 @@
 package ru.practicum.request.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import ru.practicum.request.ParticipationRequestMapper;
 import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.service.UserService;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 

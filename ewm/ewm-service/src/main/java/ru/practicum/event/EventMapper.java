@@ -1,16 +1,8 @@
 package ru.practicum.event;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import ru.practicum.category.CategoryMapper;
-import ru.practicum.dto.event.EventDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.EventState;
-import ru.practicum.dto.event.EventUpdateRequest;
-import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
 import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.user.UserMapper;

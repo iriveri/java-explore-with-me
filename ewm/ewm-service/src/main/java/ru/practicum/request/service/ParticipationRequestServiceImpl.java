@@ -1,5 +1,6 @@
 package ru.practicum.request.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.event.EventState;
@@ -17,7 +18,6 @@ import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.User;
 import ru.practicum.user.service.UserService;
 
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

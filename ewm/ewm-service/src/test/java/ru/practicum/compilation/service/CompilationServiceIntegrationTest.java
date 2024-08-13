@@ -1,5 +1,6 @@
 package ru.practicum.compilation.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,6 @@ import ru.practicum.dto.compilation.UpdateCompilationDto;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.NotFoundException;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CompilationServiceIntegrationTest {
 
     @Autowired
-    private CompilationServiceImpl compilationService;
+    private CompilationService compilationService;
 
     @Autowired
     private CompilationRepository compilationRepository;

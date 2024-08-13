@@ -1,10 +1,8 @@
-package ru.practicum;
+package ru.practicum.comment;
 
 import org.mapstruct.Mapper;
-
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
 
@@ -14,5 +12,5 @@ import ru.practicum.dto.comment.NewCommentDto;
 public interface CommentMapper {
     Comment fromDto(NewCommentDto newComment);
 
-    CommentDto toDto(Comment сomment);
+    CommentDto toDto(Comment comment);
 }

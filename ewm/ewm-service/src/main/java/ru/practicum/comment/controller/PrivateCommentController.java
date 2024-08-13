@@ -1,21 +1,15 @@
-package ru.practicum.controller;
+package ru.practicum.comment.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
-import ru.practicum.service.CommentService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @Slf4j
@@ -25,6 +19,7 @@ public class PrivateCommentController {
 
     private final CommentService commentService;
 
+    @Autowired
     public PrivateCommentController(CommentService commentService) {
         this.commentService = commentService;
     }
@@ -38,7 +33,7 @@ public class PrivateCommentController {
     @PostMapping
     public ResponseEntity<CommentDto> addComment(@Valid @RequestBody NewCommentDto commentDto, @PathVariable Long userId) {
         log.debug("Endpoint POST /comments has been reached with CommentDto: {}", commentDto);
-        CommentDto createdComment = commentService.addComment(commentDto,userId);
+        CommentDto createdComment = commentService.addComment(commentDto, userId);
         log.info("Comment {} created successfully", createdComment.getId());
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
@@ -58,7 +53,7 @@ public class PrivateCommentController {
 
         log.debug("Endpoint PUT /comments/{} has been reached with newText: {}", commentId, newText);
 
-        CommentDto updatedComment = commentService.editComment(commentId,userId, newText);
+        CommentDto updatedComment = commentService.editComment(commentId, userId, newText);
         log.info("Comment {} updated successfully", commentId);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
@@ -70,10 +65,10 @@ public class PrivateCommentController {
      * @return {@link ResponseEntity} содержащий статус ответа {@link HttpStatus#NO_CONTENT}
      */
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId,            @PathVariable Long userId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @PathVariable Long userId) {
 
         log.debug("Endpoint DELETE /comments/{} has been reached", commentId);
-        commentService.deleteComment(commentId,userId);
+        commentService.deleteComment(commentId, userId);
         log.info("Comment {} deleted successfully", commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

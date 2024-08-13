@@ -11,11 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatisticClient;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.NewCategoryDto;
-import ru.practicum.dto.event.EventDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.EventSortOption;
-import ru.practicum.dto.event.EventState;
-import ru.practicum.dto.event.NewEventDto;
+import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.admin.AdminAction;
 import ru.practicum.dto.event.admin.AdminUpdateEventRequest;
 import ru.practicum.dto.event.user.UserUpdateEventRequest;
@@ -39,10 +35,10 @@ import static org.mockito.ArgumentMatchers.*;
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-public class EventServiceImplIntegrationTest {
+public class EventServiceIntegrationTest {
 
     @Autowired
-    private EventServiceImpl eventService;
+    private EventService eventService;
 
     @Autowired
     private EventRepository eventRepository;

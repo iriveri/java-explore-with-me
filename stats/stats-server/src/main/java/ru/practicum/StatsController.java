@@ -1,10 +1,12 @@
 package ru.practicum;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Validated
 @Slf4j
 public class StatsController {
     private final StatsService service;
@@ -65,8 +68,8 @@ public class StatsController {
      */
     @GetMapping("/stats")
     public ResponseEntity<List<ViewStatsDto>> getStatistics(
-            @RequestParam(value = "start") @DateTimeFormat(pattern = pattern) LocalDateTime start,
-            @RequestParam(value = "end") @DateTimeFormat(pattern = pattern) LocalDateTime end,
+            @RequestParam(value = "start") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam(value = "end") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
             @RequestParam(value = "uris", required = false) Optional<List<String>> uris,
             @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
 

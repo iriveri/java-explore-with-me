@@ -1,14 +1,12 @@
-package ru.practicum.service;
+package ru.practicum.comment.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.Comment;
-import ru.practicum.CommentBan;
-import ru.practicum.CommentMapper;
-import ru.practicum.CommentRepository;
+import ru.practicum.comment.*;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
 import ru.practicum.event.Event;
@@ -25,11 +23,12 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserService userService; // Сервис для работы с пользователями
-
-    private final EventService eventService; // Сервис для работы с пользователями
+    private final UserService userService;
+    private final EventService eventService;
     private final CommentMapper commentMapper;
     private final BanRepository banRepository;
+
+    @Autowired
     public CommentServiceImpl(CommentRepository commentRepository, UserService userService, EventService eventService, CommentMapper commentMapper, BanRepository banRepository) {
         this.commentRepository = commentRepository;
         this.userService = userService;
@@ -78,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
-
+        //проверка на владельца поста
         if (!comment.getUser().equals(userService.getEntityById(userId))) {
             throw new IllegalArgumentException("You can only delete your own comments");
         }
@@ -125,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         Pageable pageable = PageRequest.of(from, size, Sort.by(direction, "createdAt"));
-
+        //сделать так чтобы первыми возвращались закреплённые
         Page<Comment> commentsPage = commentRepository.findByEventId(eventId, pageable);
         return commentsPage.stream()
                 .map(commentMapper::toDto)

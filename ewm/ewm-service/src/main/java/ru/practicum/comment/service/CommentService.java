@@ -1,15 +1,14 @@
-package ru.practicum.service;
+package ru.practicum.comment.service;
 
-import ru.practicum.Comment;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
 
 import java.util.List;
 
 public interface CommentService {
-    CommentDto addComment( NewCommentDto commentDto, Long userId);
+    CommentDto addComment(NewCommentDto commentDto, Long userId);
 
-    CommentDto editComment(Long commentId,Long userId, String newText);
+    CommentDto editComment(Long commentId, Long userId, String newText);
 
     void deleteComment(Long commentId, Long userId);
 
