@@ -14,7 +14,7 @@ import ru.practicum.event.Event;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.NotFoundException;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

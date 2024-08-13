@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -37,11 +37,11 @@ public class StatisticClient {
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .bodyValue(hitData)
                 .retrieve()
-                .onStatus(HttpStatus::is2xxSuccessful, clientResponse -> {
+                .onStatus(HttpStatusCode::is2xxSuccessful, clientResponse -> {
                     // Логирование или обработка успешного ответа
                     return Mono.empty(); // Успешный ответ
                 })
-                .onStatus(HttpStatus::isError, clientResponse -> {
+                .onStatus(HttpStatusCode::isError, clientResponse -> {
                     // Логирование или обработка неуспешного ответа
                     return Mono.error(new RuntimeException("Ошибка при отправке данных"));
                 })

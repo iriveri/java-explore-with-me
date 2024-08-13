@@ -16,9 +16,9 @@ import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.EventSortOption;
 import ru.practicum.event.service.EventService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
-import javax.validation.constraints.Min;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
 

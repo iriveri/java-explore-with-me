@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 

@@ -15,7 +15,7 @@ import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @Slf4j

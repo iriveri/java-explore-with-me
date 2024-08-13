@@ -17,7 +17,7 @@ import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.User;
 import ru.practicum.user.service.UserService;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

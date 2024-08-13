@@ -10,7 +10,7 @@ import ru.practicum.dto.ApiError;
 import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.exception.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice

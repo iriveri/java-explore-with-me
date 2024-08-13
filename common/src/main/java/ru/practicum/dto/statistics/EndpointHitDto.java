@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.validation.IpAddress;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import java.time.LocalDateTime;
 
 @Data

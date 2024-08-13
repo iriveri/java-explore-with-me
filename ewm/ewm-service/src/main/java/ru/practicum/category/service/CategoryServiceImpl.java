@@ -13,7 +13,7 @@ import ru.practicum.event.EventRepository;
 import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.exception.NotFoundException;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
