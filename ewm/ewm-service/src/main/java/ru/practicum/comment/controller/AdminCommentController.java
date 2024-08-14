@@ -50,12 +50,12 @@ public class AdminCommentController {
      * @param eventId идентификатор события
      * @return {@link ResponseEntity} содержащий статус ответа {@link HttpStatus#OK} или {@link HttpStatus#NOT_FOUND} в случае ошибки
      */
-    @PostMapping("/ban/{userId}/post/{eventId}")
+    @PostMapping("/ban/{userId}/event/{eventId}")
     public ResponseEntity<Void> banUserFromCommenting(@PathVariable Long userId, @PathVariable Long eventId) {
-        log.debug("Endpoint POST /admin/comments/ban/{}/post/{} has been reached", userId, eventId);
+        log.debug("Endpoint POST /admin/comments/ban/{}/event/{} has been reached", userId, eventId);
 
         commentService.banUserFromCommenting(userId, eventId);
-        log.info("User {} has been banned from commenting on post {}", userId, eventId);
+        log.info("User {} has been banned from commenting on event {}", userId, eventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

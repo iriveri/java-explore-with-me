@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private Long eventId;
-    private LocalDateTime createdOn;
-    private LocalDateTime changedOn;
+    private LocalDateTime createdAt;
+    private LocalDateTime editedAt;
     private String text;
+    private Boolean pinned;
 }

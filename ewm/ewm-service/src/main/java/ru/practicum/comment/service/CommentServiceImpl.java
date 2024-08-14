@@ -131,7 +131,7 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalArgumentException("Invalid sort direction: " + sortDirection);
         }
 
-        Pageable pageable = PageRequest.of(from, size, Sort.by(direction, "pinned").descending().and(Sort.by(direction, "createdAt")));
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Order.desc("pinned")).descending().and(Sort.by(direction, "createdAt")));
         Page<Comment> commentsPage = commentRepository.findByEventId(eventId, pageable);
         return commentsPage.stream()
                 .map(commentMapper::toDto)

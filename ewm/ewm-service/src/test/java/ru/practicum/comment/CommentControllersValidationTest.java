@@ -59,13 +59,13 @@ class CommentControllersValidationTest {
         Mockito.doNothing().when(commentService).banUserFromCommenting(1L, 1L);
 
         // Test the ban user from commenting endpoint
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/comments/ban/1/post/1"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/comments/ban/1/event/1"))
                 .andExpect(status().isOk());
 
         // Test with an invalid user or event ID
         Mockito.doThrow(new NotFoundException("User or Event not found")).when(commentService).banUserFromCommenting(2L, 2L);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/comments/ban/2/post/2"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/comments/ban/2/event/2"))
                 .andExpect(status().isNotFound());
     }
 
@@ -95,7 +95,7 @@ class CommentControllersValidationTest {
                 .thenReturn(shortCommentDto);
 
         // Test the add comment endpoint
-        mockMvc.perform(MockMvcRequestBuilders.post("/1/comments")
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/1/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newCommentDto)))
                 .andExpect(status().isCreated())
@@ -105,7 +105,7 @@ class CommentControllersValidationTest {
         // Test with invalid input
         NewCommentDto invalidCommentDto = new NewCommentDto(1L, "");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/1/comments")
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/1/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidCommentDto)))
                 .andExpect(status().isBadRequest());
@@ -120,7 +120,7 @@ class CommentControllersValidationTest {
                 .thenReturn(updatedCommentDto);
 
         // Test the edit comment endpoint
-        mockMvc.perform(MockMvcRequestBuilders.put("/1/comments/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/1/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newText))
                 .andExpect(status().isOk())
@@ -128,14 +128,14 @@ class CommentControllersValidationTest {
                 .andExpect(jsonPath("$.text").value("Updated comment"));
 
         // Test with invalid newText (empty string)
-        mockMvc.perform(MockMvcRequestBuilders.put("/1/comments/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/1/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
                 .andExpect(status().isBadRequest());
 
         // Test with invalid newText (too long string)
         String longText = "a".repeat(201);
-        mockMvc.perform(MockMvcRequestBuilders.put("/1/comments/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/1/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(longText))
                 .andExpect(status().isBadRequest());
@@ -147,21 +147,21 @@ class CommentControllersValidationTest {
         Mockito.doNothing().when(commentService).delete(1L, 1L);
 
         // Test the delete comment endpoint
-        mockMvc.perform(MockMvcRequestBuilders.delete("/1/comments/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/1/comments/1"))
                 .andExpect(status().isNoContent());
 
         // Test for a non-existent comment
         Mockito.doThrow(new NotFoundException("Comment not found")).when(commentService).delete(2L, 1L);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/1/comments/2"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/1/comments/2"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testGetComments() throws Exception {
         List<CommentDto> comments = List.of(
-                new CommentDto(1L, 1L, LocalDateTime.now(), null, "First comment"),
-                new CommentDto(2L, 1L, LocalDateTime.now(), null, "Second comment")
+                new CommentDto(1L, 1L, LocalDateTime.now(), null, "First comment", false),
+                new CommentDto(2L, 1L, LocalDateTime.now(), null, "Second comment", false)
         );
 
         Mockito.when(commentService.getCommentsByPostId(eq(1L), eq(0), eq(10), eq("DESC")))
@@ -196,7 +196,7 @@ class CommentControllersValidationTest {
 
     @Test
     public void testGetComment() throws Exception {
-        CommentDto comment = new CommentDto(1L, 1L, LocalDateTime.now(), null, "Test comment");
+        CommentDto comment = new CommentDto(1L, 1L, LocalDateTime.now(), null, "Test comment", false);
 
         Mockito.when(commentService.getById(1L)).thenReturn(comment);
 

@@ -1,7 +1,6 @@
 package ru.practicum.comment.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.comment.service.CommentService;
 import ru.practicum.dto.comment.NewCommentDto;
 import ru.practicum.dto.comment.ShortCommentDto;
+import ru.practicum.dto.comment.UpdateCommentRequest;
 
 @RestController
 @Slf4j
 @Validated
-@RequestMapping("/{userId}/comments")
+@RequestMapping("/users/{userId}/comments")
 public class PrivateCommentController {
 
     private final CommentService commentService;
@@ -58,11 +58,11 @@ public class PrivateCommentController {
     public ResponseEntity<ShortCommentDto> editComment(
             @PathVariable Long commentId,
             @PathVariable Long userId,
-            @RequestBody @Size(min = 1, max = 200) String newText) {
+            @RequestBody @Valid UpdateCommentRequest newText) {
 
         log.debug("Endpoint PUT /comments/{} has been reached with newText: {}", commentId, newText);
 
-        ShortCommentDto updatedComment = commentService.edit(commentId, userId, newText);
+        ShortCommentDto updatedComment = commentService.edit(commentId, userId, newText.getText());
         log.info("Comment {} updated successfully", commentId);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
