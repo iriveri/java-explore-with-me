@@ -17,6 +17,7 @@ import ru.practicum.comment.service.CommentService;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.comment.NewCommentDto;
 import ru.practicum.dto.comment.ShortCommentDto;
+import ru.practicum.dto.comment.UpdateCommentRequest;
 import ru.practicum.exception.NotFoundException;
 
 import java.time.LocalDateTime;
@@ -115,6 +116,8 @@ class CommentControllersValidationTest {
     public void testEditComment() throws Exception {
         ShortCommentDto updatedCommentDto = new ShortCommentDto(1L, 1L, LocalDateTime.now(), "Updated comment");
         String newText = "Updated comment";
+        UpdateCommentRequest updateCommentRequest = new UpdateCommentRequest(newText);
+        ObjectMapper objectMapper = new ObjectMapper();
 
         Mockito.when(commentService.edit(eq(1L), eq(1L), eq(newText)))
                 .thenReturn(updatedCommentDto);
@@ -122,7 +125,7 @@ class CommentControllersValidationTest {
         // Test the edit comment endpoint
         mockMvc.perform(MockMvcRequestBuilders.put("/users/1/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(newText))
+                        .content(objectMapper.writeValueAsString(updateCommentRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.text").value("Updated comment"));
