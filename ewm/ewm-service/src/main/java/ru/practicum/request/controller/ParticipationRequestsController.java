@@ -117,7 +117,7 @@ public class ParticipationRequestsController {
      * @param updateRequest {@link EventRequestStatusUpdateCommand} Новый статус для заявок на участие в событии текущего пользователя
      * @return {@link ResponseEntity} содержащий обьект {@link EventRequestStatusUpdateResponse} и статус ответа {@link HttpStatus#OK}
      */
-    @PatchMapping("/events/{eventId}/requests")
+    @PatchMapping({"/events/{eventId}/requests", "/events/{eventId}/requests/"})
     public ResponseEntity<EventRequestStatusUpdateResponse> changeRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
