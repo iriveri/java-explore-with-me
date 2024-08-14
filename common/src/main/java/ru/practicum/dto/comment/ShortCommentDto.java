@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDto {
+public class ShortCommentDto {
     private Long id;
     private Long eventId;
     private LocalDateTime createdOn;
-    private LocalDateTime changedOn;
     private String text;
 }

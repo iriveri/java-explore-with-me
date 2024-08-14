@@ -1,14 +1,14 @@
 package ru.practicum.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.user.UserShortDto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data

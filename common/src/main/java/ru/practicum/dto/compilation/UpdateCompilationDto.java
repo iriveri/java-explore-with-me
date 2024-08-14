@@ -1,11 +1,11 @@
 package ru.practicum.dto.compilation;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.validation.UniqueElements;
 
-import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Data

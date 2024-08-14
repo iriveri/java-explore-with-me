@@ -1,9 +1,9 @@
 package ru.practicum;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.dto.statistics.EndpointHitDto;
 import ru.practicum.dto.statistics.ViewStatsDto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,8 @@ import java.util.Optional;
 @Slf4j
 public class StatsController {
     private final StatsService service;
-    private final String pattern = "yyyy-MM-dd HH:mm:ss";
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     public StatsController(StatsService service) {
@@ -68,19 +68,27 @@ public class StatsController {
      */
     @GetMapping("/stats")
     public ResponseEntity<List<ViewStatsDto>> getStatistics(
-            @RequestParam(value = "start") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam(value = "end") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+            @RequestParam(value = "start") String start,
+            @RequestParam(value = "end") String end,
             @RequestParam(value = "uris", required = false) Optional<List<String>> uris,
             @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        try {
+            startDateTime = LocalDateTime.parse(start, formatter);
+            endDateTime = LocalDateTime.parse(end, formatter);
+        } catch (Exception e) {
+            throw new ValidationException("Invalid input start or end format");
+        }
 
-        if (end.isBefore(start)) {
+        if (endDateTime.isBefore(startDateTime)) {
             throw new ValidationException("Invalid input: 'end' date is before 'start' date");
         }
 
         log.debug("Endpoint GET /stats has been reached with start: {}, end: {}, uris: {}, unique: {}",
                 start, end, uris.orElse(List.of("Empty")), unique);
 
-        List<ViewStatsDto> stats = service.getStatistics(start, end, uris.orElse(List.of()), unique);
+        List<ViewStatsDto> stats = service.getStatistics(startDateTime, endDateTime, uris.orElse(List.of()), unique);
         log.info("Statistics about {} uris fetched successfully", uris.orElse(List.of("all")));
         return ResponseEntity.ok(stats);
     }

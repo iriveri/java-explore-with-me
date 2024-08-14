@@ -1,6 +1,13 @@
 package ru.practicum.comment;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.event.Event;
@@ -10,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-@Table(name = "compilation")
+@Table(name = "comment")
 @Entity
 public class Comment {
     @Id
@@ -28,10 +35,10 @@ public class Comment {
     @Column(nullable = false)
     private String text;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(name = "edited_at")
     private LocalDateTime editedAt;
 
     @Column
