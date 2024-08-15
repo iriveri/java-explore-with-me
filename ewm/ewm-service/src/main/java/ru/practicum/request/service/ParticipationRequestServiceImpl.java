@@ -1,7 +1,6 @@
 package ru.practicum.request.service;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.requests.EventRequestStatusUpdateCommand;
@@ -29,7 +28,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     private final ParticipationRequestRepository participationRequestRepository;
     private final ParticipationRequestMapper participationRequestMapper;
 
-    @Autowired
     public ParticipationRequestServiceImpl(EventService eventService, UserService userService, ParticipationRequestRepository participationRequestRepository, ParticipationRequestMapper participationRequestMapper) {
         this.eventService = eventService;
         this.userService = userService;

@@ -2,7 +2,6 @@ package ru.practicum.comment.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,6 @@ public class PrivateCommentController {
 
     private final CommentService commentService;
 
-    @Autowired
     public PrivateCommentController(CommentService commentService) {
         this.commentService = commentService;
     }

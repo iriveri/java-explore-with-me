@@ -1,6 +1,5 @@
 package ru.practicum.comment.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +36,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final BanRepository banRepository;
 
-    @Autowired
     public CommentServiceImpl(CommentRepository commentRepository, UserService userService, EventService eventService, CommentMapper commentMapper, BanRepository banRepository) {
         this.commentRepository = commentRepository;
         this.userService = userService;

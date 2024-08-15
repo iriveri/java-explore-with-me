@@ -1,6 +1,5 @@
 package ru.practicum.event.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,7 +40,6 @@ public class EventServiceImpl implements EventService {
     private final StatisticClient statisticClient;
     private final ParticipationRequestRepository participationRequestRepository;
 
-    @Autowired
     public EventServiceImpl(EventRepository eventRepository, UserService userService,
                             CategoryService categoryService, EventMapper eventMapper, StatisticClient statisticClient, ParticipationRequestRepository participationRequestRepository) {
         this.eventRepository = eventRepository;
