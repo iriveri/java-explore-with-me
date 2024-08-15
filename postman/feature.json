@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a2b72343-e6c3-4f69-9026-2cf6c0a26dd2",
 		"name": "ewm-comments",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33188239"
 	},
 	"item": [
@@ -102,7 +102,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -182,7 +192,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -262,7 +282,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/9999999/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/9999999/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"9999999",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -342,7 +372,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -421,7 +461,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -502,7 +552,7 @@
 							"\r",
 							"// Проверка, что Event id совпадает\r",
 							"pm.test(\"Event id совпадает\", function () {\r",
-							"    pm.expect(response.eventId).to.eql( pm.collectionVariables.get(\"eventId\"));\r",
+							"    pm.expect(response.eventId,\"а должно было быть\"+pm.collectionVariables.get(\"eventId\")).to.eql( pm.collectionVariables.get(\"eventId\"));\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -525,7 +575,16 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -548,7 +607,16 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{baseUrl}}/comments/999999"
+				"url": {
+					"raw": "{{baseUrl}}/comments/999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"999999"
+					]
+				}
 			},
 			"response": []
 		},
@@ -581,6 +649,11 @@
 							"// Проверка, что  id совпадает\r",
 							"pm.test(\" id совпадает\", function () {\r",
 							"    pm.expect(response.id).to.eql(pm.collectionVariables.get(\"commentId\"));\r",
+							"});\r",
+							"\r",
+							"// Проверка, что Event id совпадает\r",
+							"pm.test(\"id совпадает\", function () {\r",
+							"    pm.expect(response.id,\"а должно было быть\"+pm.collectionVariables.get(\"commentId\")).to.eql( pm.collectionVariables.get(\"commentId\"));\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -652,7 +725,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -684,7 +768,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -771,7 +866,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -803,7 +909,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/9999999/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/9999999/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"9999999",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -835,7 +952,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/9999999"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/9999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"9999999"
+					]
+				}
 			},
 			"response": []
 		},
@@ -880,7 +1008,7 @@
 							"    const api = new API(pm);\r",
 							"    const rnd = new RandomUtils();\r",
 							"\r",
-							"    try {s\r",
+							"    try {\r",
 							"        // Создаем пользователя\r",
 							"        const user = await api.addUser(rnd.getUser());\r",
 							"        pm.collectionVariables.set(\"userId\", user.id);\r",
@@ -930,7 +1058,16 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{baseUrl}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1014,7 +1151,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1102,7 +1250,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1187,7 +1346,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments/9999999"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments/9999999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments",
+						"9999999"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1271,7 +1441,18 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/9999999/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/users/9999999/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"9999999",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1355,7 +1536,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/admin/comments/{{commentId}}"
+				"url": {
+					"raw": "{{baseUrl}}/admin/comments/{{commentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{commentId}}"
+					]
+				}
 			},
 			"response": []
 		},
@@ -1441,7 +1632,17 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/users/{{userId}}/comments"
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
