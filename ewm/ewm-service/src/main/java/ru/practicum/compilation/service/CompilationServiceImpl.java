@@ -1,6 +1,6 @@
 package ru.practicum.compilation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import ru.practicum.event.Event;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.NotFoundException;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +25,6 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventService eventService;
     private final CompilationMapper compilationMapper;
 
-    @Autowired
     public CompilationServiceImpl(CompilationRepository compilationRepository, EventService eventService, CompilationMapper compilationMapper) {
         this.compilationRepository = compilationRepository;
         this.eventService = eventService;
@@ -35,6 +33,7 @@ public class CompilationServiceImpl implements CompilationService {
 
 
     @Override
+    @Transactional
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         Compilation newCompilation = compilationMapper.fromDto(newCompilationDto);
 
@@ -72,6 +71,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public void delete(Long compilationId) {
         if (!compilationRepository.existsById(compilationId))
             throw new NotFoundException("Compilation with id=" + compilationId + " was not found");

@@ -39,10 +39,10 @@ import static org.mockito.ArgumentMatchers.*;
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-public class EventServiceImplIntegrationTest {
+public class EventServiceIntegrationTest {
 
     @Autowired
-    private EventServiceImpl eventService;
+    private EventService eventService;
 
     @Autowired
     private EventRepository eventRepository;

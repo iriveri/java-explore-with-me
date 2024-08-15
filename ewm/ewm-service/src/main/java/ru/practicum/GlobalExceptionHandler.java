@@ -1,5 +1,6 @@
 package ru.practicum;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import ru.practicum.dto.ApiError;
 import ru.practicum.exception.ConditionNotMetException;
 import ru.practicum.exception.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice

@@ -1,5 +1,7 @@
 package ru.practicum.user.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,6 @@ import ru.practicum.dto.user.NewUserDto;
 import ru.practicum.dto.user.UserDto;
 import ru.practicum.user.service.UserService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

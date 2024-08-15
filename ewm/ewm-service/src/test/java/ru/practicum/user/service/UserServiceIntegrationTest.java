@@ -13,7 +13,6 @@ import ru.practicum.user.User;
 import ru.practicum.user.UserMapper;
 import ru.practicum.user.UserRepository;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserServiceIntegrationTest {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -100,7 +99,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     public void testGetAllUsers_WithIds() {
-        List<UserDto> users = userService.getAll(Arrays.asList(userId), 0, 10);
+        List<UserDto> users = userService.getAll(Collections.singletonList(userId), 0, 10);
 
         assertThat(users).isNotNull();
         assertThat(users).hasSize(1);

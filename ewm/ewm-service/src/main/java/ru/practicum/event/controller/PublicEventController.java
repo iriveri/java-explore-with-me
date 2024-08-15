@@ -1,5 +1,9 @@
 package ru.practicum.event.controller;
 
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,9 +20,6 @@ import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.EventSortOption;
 import ru.practicum.event.service.EventService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
-import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
 

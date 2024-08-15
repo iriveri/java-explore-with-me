@@ -1,5 +1,6 @@
 package ru.practicum.compilation.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,6 @@ import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.dto.compilation.UpdateCompilationDto;
-
-import javax.validation.Valid;
 
 @RestController
 @Slf4j

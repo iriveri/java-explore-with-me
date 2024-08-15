@@ -1,5 +1,6 @@
 package ru.practicum.category.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,6 @@ import ru.practicum.dto.category.UpdateCategoryDto;
 import ru.practicum.event.EventRepository;
 import ru.practicum.exception.NotFoundException;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CategoryServiceIntegrationTest {
 
     @Autowired
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
 
     @Autowired
     private CategoryRepository categoryRepository;

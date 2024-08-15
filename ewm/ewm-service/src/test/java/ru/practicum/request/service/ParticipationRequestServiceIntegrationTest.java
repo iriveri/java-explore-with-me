@@ -1,5 +1,6 @@
 package ru.practicum.request.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,9 +24,8 @@ import ru.practicum.request.ParticipationRequestMapper;
 import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.service.UserService;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -105,7 +105,7 @@ public class ParticipationRequestServiceIntegrationTest {
         ParticipationRequestDto requestDto = participationRequestService.create(partisipantId, eventId);
 
         EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand();
-        updateRequest.setRequestIds(Arrays.asList(requestDto.getId()));
+        updateRequest.setRequestIds(Collections.singletonList(requestDto.getId()));
         updateRequest.setStatus(RequestStatus.CONFIRMED);
 
         EventRequestStatusUpdateResponse result = participationRequestService.updateStatus(userId, eventId, updateRequest);
@@ -121,7 +121,7 @@ public class ParticipationRequestServiceIntegrationTest {
         ParticipationRequestDto requestDto = participationRequestService.create(anotherUserId, eventId);
 
         EventRequestStatusUpdateCommand updateRequest = new EventRequestStatusUpdateCommand();
-        updateRequest.setRequestIds(Arrays.asList(requestDto.getId()));
+        updateRequest.setRequestIds(Collections.singletonList(requestDto.getId()));
         updateRequest.setStatus(RequestStatus.CONFIRMED);
 
         ConditionNotMetException exception = assertThrows(

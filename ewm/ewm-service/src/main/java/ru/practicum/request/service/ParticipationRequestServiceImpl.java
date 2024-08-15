@@ -1,6 +1,6 @@
 package ru.practicum.request.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.event.EventState;
 import ru.practicum.dto.requests.EventRequestStatusUpdateCommand;
@@ -17,7 +17,6 @@ import ru.practicum.request.ParticipationRequestRepository;
 import ru.practicum.user.User;
 import ru.practicum.user.service.UserService;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +28,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     private final ParticipationRequestRepository participationRequestRepository;
     private final ParticipationRequestMapper participationRequestMapper;
 
-    @Autowired
     public ParticipationRequestServiceImpl(EventService eventService, UserService userService, ParticipationRequestRepository participationRequestRepository, ParticipationRequestMapper participationRequestMapper) {
         this.eventService = eventService;
         this.userService = userService;
@@ -38,6 +36,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto create(Long userId, Long eventId) {
         User user = userService.getEntityById(userId);
         Event event = eventService.getEntityById(eventId);
@@ -119,6 +118,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto delete(Long userId, Long requestId) {
         ParticipationRequest request = getEntityById(requestId);
 

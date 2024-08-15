@@ -1,5 +1,7 @@
 package ru.practicum.event.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,6 @@ import ru.practicum.dto.event.NewEventDto;
 import ru.practicum.dto.event.user.UserUpdateEventRequest;
 import ru.practicum.event.service.EventService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
 

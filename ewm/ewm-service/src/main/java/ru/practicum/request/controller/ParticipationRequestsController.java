@@ -1,5 +1,7 @@
 package ru.practicum.request.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,6 @@ import ru.practicum.dto.requests.EventRequestStatusUpdateResponse;
 import ru.practicum.dto.requests.ParticipationRequestDto;
 import ru.practicum.request.service.ParticipationRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,7 +117,7 @@ public class ParticipationRequestsController {
      * @param updateRequest {@link EventRequestStatusUpdateCommand} Новый статус для заявок на участие в событии текущего пользователя
      * @return {@link ResponseEntity} содержащий обьект {@link EventRequestStatusUpdateResponse} и статус ответа {@link HttpStatus#OK}
      */
-    @PatchMapping("/events/{eventId}/requests")
+    @PatchMapping({"/events/{eventId}/requests", "/events/{eventId}/requests/"})
     public ResponseEntity<EventRequestStatusUpdateResponse> changeRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,

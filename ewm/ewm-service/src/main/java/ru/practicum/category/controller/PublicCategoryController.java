@@ -1,6 +1,7 @@
 package ru.practicum.category.controller;
 
 
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController

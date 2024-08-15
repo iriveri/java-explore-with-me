@@ -1,5 +1,6 @@
 package ru.practicum.category.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,6 @@ import ru.practicum.category.service.CategoryService;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.dto.category.UpdateCategoryDto;
-
-import javax.validation.Valid;
 
 @RestController
 @Slf4j
