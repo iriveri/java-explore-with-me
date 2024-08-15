@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.comment.BanRepository;
 import ru.practicum.comment.Comment;
 import ru.practicum.comment.CommentBan;
@@ -46,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ShortCommentDto create(NewCommentDto commentDto, Long userId) {
         Event event = eventService.getEntityById(commentDto.getEventId());
         if (event.getState() != EventState.PUBLISHED) {
@@ -67,6 +69,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ShortCommentDto edit(Long commentId, Long userId, String newText) {
         Comment comment = getEntityById(commentId);
 
@@ -86,6 +89,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void delete(Long commentId, Long userId) {
         Comment comment = getEntityById(commentId);
 
@@ -97,6 +101,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void delete(Long commentId) {
         Comment comment = getEntityById(commentId);
 
@@ -104,6 +109,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void pinComment(Long commentId) {
         Comment comment = getEntityById(commentId);
 
@@ -112,6 +118,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void banUserFromCommenting(Long userId, Long eventId) {
         User user = userService.getEntityById(userId);
         Event event = eventService.getEntityById(eventId);

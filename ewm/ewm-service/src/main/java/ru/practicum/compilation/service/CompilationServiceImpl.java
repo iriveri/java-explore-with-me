@@ -35,6 +35,7 @@ public class CompilationServiceImpl implements CompilationService {
 
 
     @Override
+    @Transactional
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         Compilation newCompilation = compilationMapper.fromDto(newCompilationDto);
 
@@ -72,6 +73,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public void delete(Long compilationId) {
         if (!compilationRepository.existsById(compilationId))
             throw new NotFoundException("Compilation with id=" + compilationId + " was not found");
