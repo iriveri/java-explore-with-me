@@ -38,6 +38,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto create(Long userId, Long eventId) {
         User user = userService.getEntityById(userId);
         Event event = eventService.getEntityById(eventId);
@@ -119,6 +120,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto delete(Long userId, Long requestId) {
         ParticipationRequest request = getEntityById(requestId);
 
